@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  app:
+    runtime: ${CONTAINER_RUNTIME}
+
+    # Make sure the image prefix matches --project-name in launch-container.sh
+    image: ${CONTAINER_USER}-ros-noetic:amrl-base
+
+    hostname: ${CONTAINER_USER}-ros-noetic-docker
+
+    build:
+      context: .
+      args:
+        # These are set in the launch-container.sh build script
+        CONTAINER_UID: ${CONTAINER_UID}
+        CONTAINER_USER: ${CONTAINER_USER}
+
+    volumes:
+      - /home/${CONTAINER_USER}:/home/${CONTAINER_USER}
+      - /usr/local/cuda:/usr/local/cuda
+      - /opt/libtorch:/opt/libtorch
+
+    network_mode: host
