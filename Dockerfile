@@ -42,12 +42,17 @@ RUN apt-get update && apt-get install -y \
 # somewhat frequently, so keep it near the end of the Dockerfile to make
 # rebuilds faster.
 RUN apt-get update && apt-get install -y \
+    clang-12 \
+    clang-format \
+    gdb \
     git \
     iputils-ping \
     less \
     mesa-utils \
     net-tools \
+    rsync \
     tmux \
+    tree \
     unzip \
     usbutils \
     vim \
