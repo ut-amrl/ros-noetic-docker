@@ -1,0 +1,27 @@
+# ROS_IP specifies the address of this node and implicitly the network interface
+# that ROS should use. If ROS_HOSTNAME is also set, ROS_HOSTNAME will take
+# precedence over ROS_IP, but hostname resolution might not be available in all
+# situations.
+export ROS_IP=127.0.0.1
+
+# ROS_MASTER_URI specifies the address of the roscore server and implicitly the
+# network interface ROS is using on the server. The ROS_MASTER_URI address
+# should be reachable through this machine's ROS_IP address and interface.
+export ROS_MASTER_URI=http://localhost:11311
+
+if [ "$SHELL" = "" ]; then
+    [ "$BASH" != "" ] && export SHELL=bash
+    [ "$ZSH_NAME" != "" ] && export SHELL=zsh
+fi
+
+source /opt/ros/noetic/setup.$(basename "$SHELL")
+source $HOME/catkin_ws/devel/setup.$(basename "$SHELL")
+
+# Each directory in ROS_PACKAGE_PATH is searched recursively
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/catkin_ws/src
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/ut-amrl
+
+# The pattern ${x:+:x} expands to ":$x" if $x is set, or an empty string if $x
+# is unset. See https://stackoverflow.com/a/9631350
+export PATH=/usr/local/cuda/bin${PATH:+:$PATH}
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}

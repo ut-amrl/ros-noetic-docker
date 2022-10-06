@@ -15,6 +15,12 @@ Add users to the `docker` group: <https://docs.docker.com/engine/install/linux-p
 
 ## Usage
 
+### Add .dockerrc to your shell file
+
+```shell
+[[ -e /.dockerrc ]] && source /.dockerrc
+```
+
 ### Build and start your Docker container
 
 This script always rebuilds the Docker container before starting the
@@ -39,7 +45,7 @@ Under the `NAMES` column, there should be a container with the name
 ### Start a shell session in your Docker container
 
 ```shell
-docker exec -it $USER-ros-noetic-app-1 [sh|bash|zsh]
+docker exec -it $USER-ros-noetic-app-1 [bash|zsh]
 ```
 
 ### Stop your Docker container

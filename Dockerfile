@@ -1,6 +1,5 @@
 FROM osrf/ros:noetic-desktop-full-focal
 
-ENV PATH /usr/local/cuda/bin/:$PATH
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
 LABEL com.nvidia.volumes.needed="nvidia_driver"
@@ -68,16 +67,14 @@ RUN useradd -u $CONTAINER_UID $CONTAINER_USER && \
     echo "$CONTAINER_USER:$CONTAINER_PASSWORD" | chpasswd
 USER $CONTAINER_USER
 
-# /.rosrc provides some default commands to initialize ROS and export some ROS_*
-# environment variables. Users can source /.rosrc in their shell init file, e.g.
+# /.dockerrc provides some default commands to initialize ROS and export some
+# PATH environment variables. Users can source /.dockerrc in their shell init
+# file, e.g.
 #
-#   [[ -e /.rosrc ]] && source /.rosrc
+#   [[ -e /.dockerrc ]] && source /.dockerrc
 #
 # or specify their own configuration in their shell init file.
-COPY .rosrc /.rosrc
-
-ENV ROS_HOSTNAME=localhost
-ENV ROS_MASTER_URI=http://localhost:11311
+COPY .dockerrc /.dockerrc
 
 # TODO: "roscore" is shared between containers with the current network
 # configuration. The container will fail to start if an instance of roscore is
