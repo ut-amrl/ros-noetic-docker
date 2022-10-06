@@ -37,14 +37,15 @@ if [[ ! -d /opt/libtorch ]]; then
         TORCH_PLATFORM="CPU"
     fi
 
-    echo "Warning: Missing dependency: /opt/libtorch does not exist"
-    echo "  Required for https://github.com/ut-amrl/graph_navigation"
-    echo ""
-    echo "  From https://pytorch.org, download"
-    echo "    [Stable] [Linux] [LibTorch] [C++] [$TORCH_PLATFORM] [cxx11 ABI]"
-    echo "  Unzip the file to /opt (may require sudo), e.g."
-    echo "    unzip -q -d /opt libtorch.zip"
-    echo ""
+    echo "Warning: Missing dependency: /opt/libtorch does not exist
+  Required for https://github.com/ut-amrl/graph_navigation
+
+  From https://pytorch.org, download
+    [Stable] [Linux] [LibTorch] [C++] [$TORCH_PLATFORM] [cxx11 ABI]
+  Unzip the file to /opt (may require sudo), e.g.
+    unzip -q -d /opt libtorch.zip
+"
+
     read -p "Continue anyway? [y/n]: " user_input
     if [[ "$user_input" != [Yy]* ]]; then
         exit 1
