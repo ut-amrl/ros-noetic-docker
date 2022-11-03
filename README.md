@@ -15,19 +15,20 @@ Add users to the `docker` group: <https://docs.docker.com/engine/install/linux-p
 
 ## Usage
 
-### Add .dockerrc to your shell file
+### Add /dockerrc to your shell file
 
 ```shell
-[[ -e /.dockerrc ]] && source /.dockerrc
+[[ -e /dockerrc ]] && source /dockerrc
 ```
 
 ### Build and start your Docker container
 
-This script always rebuilds the Docker container before starting the
-container in detached mode.
+```shell
+./build.py <tag>
+```
 
 ```shell
-./launch-container.sh
+./launch.py <tag>
 ```
 
 ### Verify that your Docker container is running
@@ -40,12 +41,12 @@ $ docker ps
 ```
 
 Under the `NAMES` column, there should be a container with the name
-`${YOUR_USERNAME}-ros-noetic-app-1`.
+`${YOUR_USERNAME}-noetic-<tag>-app-1`.
 
 ### Start a shell session in your Docker container
 
 ```shell
-docker exec -it $USER-ros-noetic-app-1 [bash|zsh]
+docker exec -it $USER-noetic-<tag>-app-1 [bash|zsh]
 ```
 
 ### Stop your Docker container
@@ -53,5 +54,5 @@ docker exec -it $USER-ros-noetic-app-1 [bash|zsh]
 This might take a few seconds to finish running.
 
 ```shell
-docker stop $USER-ros-noetic-app-1
+docker stop $USER-noetic-<tag>-app-1
 ```

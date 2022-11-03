@@ -7,20 +7,14 @@ LABEL com.nvidia.volumes.needed="nvidia_driver"
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=America/Chicago
 
-# Installation tools
+# Package installation tools
 RUN apt-get update && apt-get install -y \
     apt-utils \
     curl \
-    software-properties-common
-
-# Code packaging and compilation tools
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    cmake \
-    g++ \
-    python3-catkin-tools \
     python-is-python3 \
-    python3-pip
+    python3-catkin-tools \
+    python3-pip \
+    software-properties-common
 
 # https://github.com/ut-amrl/amrl_shared_lib
 RUN apt-get update && apt-get install -y \
@@ -38,14 +32,20 @@ RUN apt-get update && apt-get install -y \
     libgoogle-glog-dev libgflags-dev libceres-dev libtbb-dev \
     libncurses5-dev libpopt-dev
 
-# Utilities to make things easier inside the container. This list may be changed
-# somewhat frequently, so keep it near the end of the Dockerfile to make
-# rebuilds faster.
+# Development tools
 RUN apt-get update && apt-get install -y \
+    build-essential \
     clang-12 \
     clang-format \
+    cmake \
+    g++ \
     gdb \
     git \
+    valgrind \
+    vim
+
+# Additional utilities to make things easier inside the container.
+RUN apt-get update && apt-get install -y \
     iputils-ping \
     less \
     mesa-utils \
@@ -55,7 +55,6 @@ RUN apt-get update && apt-get install -y \
     tree \
     unzip \
     usbutils \
-    vim \
     zip \
     zsh
 
@@ -71,15 +70,15 @@ ARG CONTAINER_HOME="/home/$CONTAINER_USER"
 RUN useradd -u $CONTAINER_UID $CONTAINER_USER && \
     echo "$CONTAINER_USER:$CONTAINER_PASSWORD" | chpasswd
 
-# /.dockerrc provides some default commands to initialize ROS and export some
-# PATH environment variables. Users can source /.dockerrc in their shell init
+# /dockerrc provides some default commands to initialize ROS and export some
+# PATH environment variables. Users can source /dockerrc in their shell init
 # file, e.g.
 #
-#   [[ -e /.dockerrc ]] && source /.dockerrc
+#   [[ -e /dockerrc ]] && source /dockerrc
 #
 # or specify their own configuration in their shell init file.
-COPY .dockerrc /.dockerrc
-RUN chown $CONTAINER_USER /.dockerrc
+COPY dockerrc /dockerrc
+RUN chown $CONTAINER_USER /dockerrc
 
 USER $CONTAINER_USER
 

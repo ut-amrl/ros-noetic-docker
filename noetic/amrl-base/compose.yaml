@@ -4,15 +4,14 @@ services:
   app:
     runtime: ${CONTAINER_RUNTIME}
 
-    # Make sure the image prefix matches --project-name in launch-container.sh
-    image: ${CONTAINER_USER}-ros-noetic:amrl-base
+    image: ${CONTAINER_USER}-noetic:amrl-base
 
-    hostname: ${CONTAINER_USER}-ros-noetic-docker
+    hostname: ${CONTAINER_USER}-noetic:amrl-base@${CONTAINER_HOST}
 
     build:
-      context: .
+      context: ../
+      dockerfile: amrl-base/Dockerfile
       args:
-        # These are set in the launch-container.sh build script
         CONTAINER_UID: ${CONTAINER_UID}
         CONTAINER_USER: ${CONTAINER_USER}
 
