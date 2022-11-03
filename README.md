@@ -17,9 +17,15 @@ Add users to the `docker` group: <https://docs.docker.com/engine/install/linux-p
 
 ### Add /dockerrc to your shell file
 
+`/dockerrc` provides default commands to initialize ROS and associated PATH
+environment variables. Users can use these defaults by sourcing `/dockerrc` in
+their shell files, e.g.
+
 ```shell
 [[ -e /dockerrc ]] && source /dockerrc
 ```
+
+or specify their own configuration in their shell init file.
 
 ### Build and start your Docker container
 

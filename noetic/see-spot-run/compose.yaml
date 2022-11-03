@@ -25,6 +25,7 @@ services:
       - /home/${CONTAINER_USER}:/home/${CONTAINER_USER}
       - /usr/local/cuda:/usr/local/cuda
       - /opt/libtorch:/opt/libtorch
+      - ../dockerrc:/dockerrc
       # X session
       - /tmp/.X11-unix:/tmp/.X11-unix
       # Docker-to-host audio forwarding

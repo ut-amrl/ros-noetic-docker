@@ -70,16 +70,6 @@ ARG CONTAINER_HOME="/home/$CONTAINER_USER"
 RUN useradd -u $CONTAINER_UID $CONTAINER_USER && \
     echo "$CONTAINER_USER:$CONTAINER_PASSWORD" | chpasswd
 
-# /dockerrc provides some default commands to initialize ROS and export some
-# PATH environment variables. Users can source /dockerrc in their shell init
-# file, e.g.
-#
-#   [[ -e /dockerrc ]] && source /dockerrc
-#
-# or specify their own configuration in their shell init file.
-COPY dockerrc /dockerrc
-RUN chown $CONTAINER_USER /dockerrc
-
 USER $CONTAINER_USER
 
 # TODO: "roscore" is shared between containers with the current network
