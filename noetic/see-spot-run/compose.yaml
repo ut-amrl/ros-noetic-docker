@@ -21,17 +21,24 @@ services:
       # Docker-to-host audio forwarding
       - PULSE_SERVER=unix:/run/user/${CONTAINER_UID}/pulse/native
 
+    user: ${CONTAINER_UID}:${CONTAINER_UID}
+    working_dir: /home/${CONTAINER_USER}
+
     volumes:
       - /home/${CONTAINER_USER}:/home/${CONTAINER_USER}
-      - /usr/local/cuda:/usr/local/cuda
-      - /opt/libtorch:/opt/libtorch
       - ../dockerrc:/dockerrc
+      # Shared code dependencies
+      - /usr/local/cuda:/usr/local/cuda:ro
+      - /opt/libtorch:/opt/libtorch:ro
+      # User and group list
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
       # X session
-      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
       # Docker-to-host audio forwarding
-      - /etc/alsa:/etc/alsa
-      - /usr/share/alsa:/usr/share/alsa
-      - /run/user/${CONTAINER_UID}/pulse/native:/run/user/${CONTAINER_UID}/pulse/native
+      - /etc/alsa:/etc/alsa:ro
+      - /usr/share/alsa:/usr/share/alsa:ro
+      - /run/user/${CONTAINER_UID}/pulse/native:/run/user/${CONTAINER_UID}/pulse/native:ro
 
     # Using the host system's IPC namespace fixes UI glitches in rviz.
     #

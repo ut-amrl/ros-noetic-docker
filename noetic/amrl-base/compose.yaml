@@ -9,16 +9,23 @@ services:
     hostname: ${CONTAINER_USER}-noetic:amrl-base@${CONTAINER_HOST}
 
     build:
-      context: ../
+      context: ..
       dockerfile: amrl-base/Dockerfile
       args:
         CONTAINER_UID: ${CONTAINER_UID}
         CONTAINER_USER: ${CONTAINER_USER}
 
+    user: ${CONTAINER_UID}:${CONTAINER_UID}
+    working_dir: /home/${CONTAINER_USER}
+
     volumes:
       - /home/${CONTAINER_USER}:/home/${CONTAINER_USER}
-      - /usr/local/cuda:/usr/local/cuda
-      - /opt/libtorch:/opt/libtorch
       - ../dockerrc:/dockerrc
+      # Shared code dependencies
+      - /usr/local/cuda:/usr/local/cuda:ro
+      - /opt/libtorch:/opt/libtorch:ro
+      # User and group list
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
 
     network_mode: host

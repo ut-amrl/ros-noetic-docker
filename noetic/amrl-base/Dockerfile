@@ -58,20 +58,6 @@ RUN apt-get update && apt-get install -y \
     zip \
     zsh
 
-# Add a user inside the Docker container with the same username and UID as the
-# user building the container. The CONTAINER_USER and CONTAINER_UID arguments
-# need to be exported accordingly in the launch-container.sh build script and
-# listed again as build arguments in the docker-compose.yml file.
-ARG CONTAINER_UID
-ARG CONTAINER_USER
-ARG CONTAINER_PASSWORD="docker"
-ARG CONTAINER_HOME="/home/$CONTAINER_USER"
-
-RUN useradd -u $CONTAINER_UID $CONTAINER_USER && \
-    echo "$CONTAINER_USER:$CONTAINER_PASSWORD" | chpasswd
-
-USER $CONTAINER_USER
-
 # TODO: "roscore" is shared between containers with the current network
 # configuration. The container will fail to start if an instance of roscore is
 # already running, whether on the host or within a different container. Users
@@ -80,5 +66,3 @@ USER $CONTAINER_USER
 # sleep command keeps the container running.
 CMD sleep infinity
 # CMD roscore
-
-WORKDIR $CONTAINER_HOME

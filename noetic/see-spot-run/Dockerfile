@@ -1,8 +1,6 @@
 ARG CONTAINER_USER
 FROM ${CONTAINER_USER}-noetic:amrl-base
 
-USER root
-
 # https://github.com/ut-amrl/robofleet_client
 RUN apt-get update && apt-get install -y \
     cmake qt5-default libqt5websockets5-dev
@@ -39,10 +37,3 @@ RUN apt-get update && apt-get install -y \
 # Additional utilities
 RUN apt-get update && apt-get install -y \
     joystick
-
-# https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG CONTAINER_USER
-
-# Add to the dialout group to access /dev/ttyUSB0 for vectornav
-RUN usermod -aG dialout $CONTAINER_USER
-USER $CONTAINER_USER
