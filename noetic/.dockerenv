@@ -3,11 +3,13 @@
 # precedence over ROS_IP, but hostname resolution might not be available in all
 # situations.
 export ROS_IP=127.0.0.1
+# export ROS_IP=192.168.200.71
 
 # ROS_MASTER_URI specifies the address of the roscore server and implicitly the
 # network interface ROS is using on the server. The ROS_MASTER_URI address
 # should be reachable through this machine's ROS_IP address and interface.
 export ROS_MASTER_URI=http://localhost:11311
+# export ROS_MASTER_URI=http://192.168.200.2:11311
 
 if [ "$SHELL" = "" ]; then
     [ "$BASH" != "" ] && export SHELL=bash
@@ -31,3 +33,6 @@ fi
 # is unset. See https://stackoverflow.com/a/9631350
 export PATH=/usr/local/cuda/bin${PATH:+:$PATH}
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+
+export CC=/usr/bin/clang-12
+export CXX=/usr/bin/clang++-12
