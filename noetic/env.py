@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 
+import getpass
 import json
 import os
 import os.path
@@ -11,7 +12,7 @@ from typing import Any
 
 
 def _get_container_user() -> str:
-    return os.getlogin()
+    return getpass.getuser()
 
 
 def _get_container_uid() -> str:
