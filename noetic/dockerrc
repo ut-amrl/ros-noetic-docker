@@ -21,6 +21,10 @@ source $HOME/catkin_ws/devel/setup.$(basename "$SHELL")
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/catkin_ws/src
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/ut-amrl
 
+if rospack find amrl_msgs &> /dev/null; then
+    export PYTHONPATH="$(rospack find amrl_msgs)/src:${PYTHONPATH}"
+fi
+
 # The pattern ${x:+:x} expands to ":$x" if $x is set, or an empty string if $x
 # is unset. See https://stackoverflow.com/a/9631350
 export PATH=/usr/local/cuda/bin${PATH:+:$PATH}
