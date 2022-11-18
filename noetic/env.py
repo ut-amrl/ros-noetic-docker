@@ -82,7 +82,7 @@ def _get_x_display_device() -> str:
                 if result.returncode == 0:
                     display_device = subprocess_args[2]
                     break
-            except TimeoutError:
+            except subprocess.TimeoutExpired:
                 pass
 
     if display_device == "":
