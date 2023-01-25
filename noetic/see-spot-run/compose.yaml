@@ -15,6 +15,9 @@ services:
         CONTAINER_UID: ${CONTAINER_UID}
         CONTAINER_USER: ${CONTAINER_USER}
 
+    group_add:
+      - "dialout"
+
     environment:
       # X session
       - DISPLAY=${DISPLAY}
