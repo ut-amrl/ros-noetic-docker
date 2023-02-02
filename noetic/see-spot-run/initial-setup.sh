@@ -85,8 +85,8 @@ if [[ ! -e /dockerrc ]]; then
     (cd $HOME/ut-amrl/spot_autonomy && git submodule update --init --recursive)
 
     if [[ ! -e $HOME/ut-amrl/graph_navigation && ! -L $HOME/ut-amrl/graph_navigation ]]; then
-        info "Symlinking $HOME/ut-amrl/spot_autonomy/graph_navigation to $HOME/ut-amrl"
-        ln -rs $HOME/ut-amrl/spot_autonomy/graph_navigation $HOME/ut-amrl
+        info "Symlinking ~/ut-amrl/spot_autonomy/graph_navigation to ~/ut-amrl/graph_navigation"
+        ln -rs $HOME/ut-amrl/spot_autonomy/graph_navigation $HOME/ut-amrl/
     fi
 
     if [[ ! -e $HOME/ut-amrl/k4a_ros ]]; then
