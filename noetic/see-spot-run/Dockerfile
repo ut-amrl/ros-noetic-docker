@@ -17,9 +17,13 @@ RUN apt-get update && apt-get install -y \
     qt5-default libqt5websockets5-dev libgoogle-glog-dev libgflags-dev
 
 # https://github.com/ut-amrl/spot_ros
+## Extra packages not mentioned anywhere but required for the initial
+## rosdep install --from-paths src --ignore-src -y
 RUN apt-get update && apt-get install -y \
+    ros-noetic-twist-mux \
+    ros-noetic-interactive-marker-twist-server \
     ros-noetic-velodyne-pointcloud
-# 2022-06-07: protobuf v4.x breaks pipeline, freeze to v3.20.1
+## 2022-06-07: protobuf v4.x breaks pipeline, freeze to v3.20.1
 RUN pip3 install protobuf==3.20.1
 RUN pip3 install cython empy \
     bosdyn-client==3.1.1 bosdyn-mission==3.1.1 bosdyn-api==3.1.1 bosdyn-core==3.1.1
