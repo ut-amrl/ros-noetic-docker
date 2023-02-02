@@ -15,7 +15,9 @@ if [ "$SHELL" = "" ]; then
 fi
 
 source /opt/ros/noetic/setup.$(basename "$SHELL")
-source $HOME/catkin_ws/devel/setup.$(basename "$SHELL")
+if [[ -e $HOME/catkin_ws/devel/setup.$(basename "$SHELL") ]]; then
+    source $HOME/catkin_ws/devel/setup.$(basename "$SHELL")
+fi
 
 # Each directory in ROS_PACKAGE_PATH is searched recursively
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/catkin_ws/src
