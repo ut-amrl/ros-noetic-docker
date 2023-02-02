@@ -53,18 +53,21 @@ def _get_x_display_device() -> str:
 
     if shutil.which("glxinfo") is None:
         print(
-            """Error: command not found: glxinfo
+            """Warning: command not found: glxinfo
     This script uses the glxinfo command from the mesa-utils package to detect
     accessible X display devices. An X display device is required for GUI
     applications and the Azure Kinect DK SDK.
 
-    Steps to resolve:
+    If you do not use GUI applications or the Azure Kinect DK SDK, you may
+    ignore this warning.
+
+    Steps to resolve this warning:
         - Install glxinfo with 'sudo apt install mesa-utils'
 """
         )
 
-        continue_anyway = input("Continue anyway? [y/n]: ")
-        if not continue_anyway.lower().startswith("y"):
+        ignore_warning = input("Ignore this warning? [y/n]: ")
+        if not ignore_warning.lower().startswith("y"):
             return ""
         else:
             raise FileNotFoundError("glxinfo")
@@ -87,21 +90,25 @@ def _get_x_display_device() -> str:
 
     if display_device == "":
         print(
-            """Warning: Unable to access an X display device.
+            f"""Warning: Unable to remotely access an X display device.
     An X display device is required for GUI applications and the Azure Kinect DK
     SDK.
 
-    Steps to resolve for building over ssh:
-        - Log into the computer's GUI
-        - Verify that the $DISPLAY environment variable is set in the GUI
-        - Allow any host to access the X server by running 'xhost +' in a
-          terminal
-        - Lock, but do not log out of, the computer's GUI
+    If you do not use GUI applications or the Azure Kinect DK SDK, you may
+    ignore this warning.
+
+    Steps to resolve this warning:
+        - Create an X session on "{_get_container_host()}" by logging into
+          the GUI on the physical machine.
+        - Run "xhost +" in a terminal on the physical machine.
+          This allows any host to access the running X server.
+        - Lock the screen on the physical machine. Do not log out of the
+          GUI session. Logging out of the GUI session will close the X session.
 """
         )
 
-        continue_anyway = input("Continue anyway? [y/n]: ")
-        if continue_anyway.lower().startswith("y"):
+        ignore_warning = input("Ignore this warning? [y/n]: ")
+        if ignore_warning.lower().startswith("y"):
             return ""
         else:
             raise RuntimeError("No X display device detected.")
