@@ -32,6 +32,11 @@ RUN apt-get update && apt-get install -y \
     libgoogle-glog-dev libgflags-dev libceres-dev libtbb-dev \
     libncurses5-dev libpopt-dev
 
+# https://github.com/ut-amrl/webviz
+# https://github.com/ut-amrl/robofleet_client
+RUN apt-get update && apt-get install -y \
+    cmake qt5-default libqt5websockets5-dev
+
 # Development tools
 RUN apt-get update && apt-get install -y \
     build-essential \

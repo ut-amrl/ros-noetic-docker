@@ -1,10 +1,6 @@
 ARG CONTAINER_USER
 FROM ${CONTAINER_USER}-noetic:amrl-base
 
-# https://github.com/ut-amrl/robofleet_client
-RUN apt-get update && apt-get install -y \
-    cmake qt5-default libqt5websockets5-dev
-
 # https://github.com/ut-amrl/k4a_ros
 RUN apt-get update && apt-get install -y \
     liblua5.1-0-dev libgflags-dev libgoogle-glog-dev libgoogle-perftools-dev cimg-dev
