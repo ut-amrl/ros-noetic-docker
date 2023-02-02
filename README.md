@@ -7,7 +7,7 @@ Docker containers tied to individual users on a shared machine.
 
 Install Docker Engine: <https://docs.docker.com/engine/install/ubuntu>
 
-Install the Docker Compose V2 Plugin: <https://docs.docker.com/compose/install/compose-plugin>
+Install the Docker Compose V2 Plugin: <https://docs.docker.com/compose/install/linux/>
 
 If applicable, install the NVIDIA Container Toolkit: <https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html>
 
