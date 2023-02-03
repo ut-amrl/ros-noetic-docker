@@ -7,9 +7,7 @@ but we can't use an external package."""
 class CustomLogger(logging.Logger):
     SUCCESS = 25
 
-    def success(
-        self, msg, *args, **kwargs
-    ) -> None:
+    def success(self, msg, *args, **kwargs) -> None:
         """Log 'msg % args' with severity 'SUCCESS'.
 
         To pass exception information, use the keyword argument exc_info with a true value, e.g.
@@ -25,10 +23,13 @@ class ColorFormatter(logging.Formatter):
     ANSI_GREEN = ANSI_PREFIX + "32m"
     ANSI_YELLOW = ANSI_PREFIX + "33m"
     ANSI_CYAN = ANSI_PREFIX + "36m"
+
+    ANSI_BOLD = ANSI_PREFIX + "1m"
     ANSI_RESET = ANSI_PREFIX + "0m"
 
     BASE_FORMAT = "[%(levelname)s] %(message)s"
     COLOR_FORMATS = {
+        logging.CRITICAL: f"{ANSI_BOLD}{ANSI_RED}{BASE_FORMAT}{ANSI_RESET}",
         logging.ERROR: f"{ANSI_RED}{BASE_FORMAT}{ANSI_RESET}",
         logging.WARNING: f"{ANSI_YELLOW}{BASE_FORMAT}{ANSI_RESET}",
         CustomLogger.SUCCESS: f"{ANSI_GREEN}{BASE_FORMAT}{ANSI_RESET}",
