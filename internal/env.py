@@ -119,7 +119,7 @@ def _get_x_display_device() -> str:
 def available_tags() -> "list[str]":
     tags = []
 
-    noetic_dir = Path(__file__).parent
+    noetic_dir = Path(__file__).parent.parent / "noetic"
     for entry in os.listdir(noetic_dir):
         entry_path = noetic_dir / entry
         if (
