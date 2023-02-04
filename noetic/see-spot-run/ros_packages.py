@@ -92,12 +92,6 @@ def container_entrypoint() -> None:
 
     internal.ros.rosdep_update()
 
-    # http://www.clearpathrobotics.com/assets/guides/melodic/spot-ros/ros_setup.html
-    subprocess.run(
-        ["rosdep", "install", "--from-paths", "src", "--ignore-src", "-y"],
-        cwd=Path.home() / "catkin_ws",
-    )
-
     internal.ros.build_catkin_packages()
     # We need to grab new environment variables after the catkin build.
     internal.docker.source_dockerrc()
