@@ -66,12 +66,13 @@ def host_entrypoint(config: Config) -> None:
         [
             "docker",
             "exec",
-            "-t",
+            "--tty",
+            "--workdir",
+            internal.git.get_repository_root(__file__),
             f"{_get_container_user()}-noetic-{config.tag}-app-1",
-            "bash",
-            "-c",
-            # TODO: is there a better way to do this?
-            f"SHELL=bash source /dockerrc && cd {internal.git.get_repository_root(__file__)} && python -m noetic.see-spot-run.ros_packages",
+            "python3",
+            "-m",
+            f"noetic.{config.tag}.ros_packages",
         ]
     )
 
