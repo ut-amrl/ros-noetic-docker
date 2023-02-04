@@ -1,8 +1,10 @@
-import subprocess
+import importlib
 import os
+import subprocess
 
+from internal import logger
 from internal.config import Config
-from internal.env import get_env, _get_container_user
+from internal.env import _get_container_user, get_env
 
 
 def build_image(config: Config) -> None:
@@ -11,10 +13,12 @@ def build_image(config: Config) -> None:
     subprocess.run(subprocess_args, env=get_env())
     # todo: check return code, log error and terminate if nonzero
 
-    if config.build_ros_packages and os.path.isfile(
-        f"noetic/{config.tag}/initial-setup.sh"
-    ):
-        subprocess.run([f"noetic/{config.tag}/initial-setup.sh"])
+    if config.build_ros_packages:
+        try:
+            tag_spec = importlib.import_module(f"noetic.{config.tag}.ros_packages")
+            tag_spec.host_entrypoint(config)
+        except ImportError:
+            logger.error(f"No build spec for {config.tag}")
 
 
 def launch_container(config: Config) -> None:
