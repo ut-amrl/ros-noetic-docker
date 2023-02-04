@@ -50,6 +50,9 @@ def _critical_build_failure() -> NoReturn:
 
 
 def build_catkin_packages() -> None:
+    if not os.path.exists(Path.home() / "catkin_ws/src"):
+        return
+
     logger.info("Building catkin packages")
 
     # catkin_make has a tendency to not follow the dependency graph when
