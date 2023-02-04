@@ -143,3 +143,18 @@ def get_repository_hash(repo_dir_or_file: Union[str, Path]) -> str:
         git_hash += "-dirty"
 
     return git_hash
+
+
+def get_repository_root(repo_dir_or_file: Union[str, Path]) -> str:
+    repo_dir_or_file = Path(repo_dir_or_file)
+    if os.path.isfile(repo_dir_or_file):
+        repo_dir_or_file = repo_dir_or_file.parent
+
+    result = subprocess.run(
+        ["git", "rev-parse", "--show-toplevel"],
+        capture_output=True,
+        text=True,
+        cwd=repo_dir_or_file,
+    )
+
+    return result.stdout.strip()
