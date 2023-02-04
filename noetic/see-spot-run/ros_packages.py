@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 import internal.docker
@@ -62,7 +63,7 @@ def host_entrypoint(config: Config) -> None:
 
     internal.docker.launch_container(config)
 
-    subprocess.run(
+    result = subprocess.run(
         [
             "docker",
             "exec",
@@ -75,6 +76,8 @@ def host_entrypoint(config: Config) -> None:
             f"noetic.{config.tag}.ros_packages",
         ]
     )
+    if result.returncode != 0:
+        sys.exit(result.returncode)
 
     check_clearpath_launch()
 
