@@ -105,7 +105,10 @@ def clone_repository(url: str, dest: Path, protocol: GitHubProtocol) -> None:
         str(dest.absolute()),
     ]
 
-    subprocess.run(subprocess_args)
+    try:
+        subprocess.run(subprocess_args, check=True)
+    except subprocess.CalledProcessError:
+        logger.error(f"Unable to clone {url} to {dest}")
 
 
 def update_submodules(repo_dir: Path) -> None:
@@ -119,7 +122,10 @@ def update_submodules(repo_dir: Path) -> None:
         "8",
     ]
 
-    subprocess.run(subprocess_args, cwd=repo_dir)
+    try:
+        subprocess.run(subprocess_args, cwd=repo_dir, check=True)
+    except subprocess.CalledProcessError:
+        logger.error(f"Unable to update submodules for {repo_dir}")
 
 
 def get_repository_hash(repo_dir_or_file: Union[str, Path]) -> str:
