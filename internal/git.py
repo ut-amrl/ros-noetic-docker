@@ -113,6 +113,8 @@ def update_submodules(repo_dir: Path) -> None:
         "update",
         "--init",
         "--recursive",
+        "--jobs",
+        "8",
     ]
 
     subprocess.run(subprocess_args, cwd=repo_dir)
