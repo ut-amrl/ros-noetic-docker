@@ -24,7 +24,7 @@ amrl_pkgs = [
 
 def check_clearpath_launch() -> None:
     if not os.path.exists(
-        Path.home() / "ut-amrl/spot_autonomy/launch/start_clearpath.launch"
+        Path.home() / "ut-amrl/spot_autonomy/launch/start_clearpath_spot.launch"
     ):
         logger.warning(
             """Manual setup is required in ~/ut-amrl/spot_autonomy:
