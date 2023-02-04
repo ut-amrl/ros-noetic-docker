@@ -36,17 +36,22 @@ def clone_amrl_package(url: str, protocol: internal.git.GitHubProtocol) -> None:
         internal.git.update_submodules(dest)
 
 
-def rosdep_update() -> None:
-    if not os.path.exists(Path.home() / ".ros/rosdep"):
-        logger.info("Running rosdep update")
-        subprocess.run(["rosdep", "update"])
-
-
 def _critical_build_failure() -> NoReturn:
     logger.critical("Build failed. Check build logs.")
     logger.critical("Please include the full build log if you create a GitHub issue.")
     logger.critical("https://github.com/ut-amrl/ros-noetic-docker/issues")
     sys.exit(1)
+
+
+def rosdep_update() -> None:
+    if os.path.exists(Path.home() / ".ros/rosdep"):
+        return
+
+    logger.info("Running rosdep update")
+    try:
+        subprocess.run(["rosdep", "update"], check=True)
+    except subprocess.CalledProcessError:
+        _critical_build_failure()
 
 
 def build_catkin_packages() -> None:
