@@ -86,9 +86,6 @@ def container_entrypoint() -> None:
     logger.info("We're inside the docker container now")
 
     internal.docker.source_dockerrc()
-    for k, v in os.environ.items():
-        if k.startswith("ROS"):
-            logger.info(f"{k}={v}")
 
     internal.ros.rosdep_update()
 
