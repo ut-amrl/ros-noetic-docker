@@ -120,7 +120,8 @@ def update_submodules(repo_dir: Path) -> None:
     subprocess.run(subprocess_args, cwd=repo_dir)
 
 
-def get_repository_hash(repo_dir_or_file: Path) -> str:
+def get_repository_hash(repo_dir_or_file: Union[str, Path]) -> str:
+    repo_dir_or_file = Path(repo_dir_or_file)
     if os.path.isfile(repo_dir_or_file):
         repo_dir_or_file = repo_dir_or_file.parent
 
