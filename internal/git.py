@@ -60,6 +60,8 @@ def get_user_protocol_preference() -> GitHubProtocol:
 
     (1) SSH             [public + private]      [pull + push]
     (2) HTTPS           [public only]           [pull only]
+
+    This choice will not affect how git submodules are cloned.
 """
     )
 
