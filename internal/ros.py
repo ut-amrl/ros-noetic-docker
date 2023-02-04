@@ -32,14 +32,8 @@ def clone_amrl_package(url: str, protocol: internal.git.GitHubProtocol) -> None:
     # exited unexpectedly. This is part of the reason we aren't running
     # submodule as part of the git clone command
     if (dest / ".gitmodules").exists():
-        import time
-
-        t_start = time.time()
         logger.info(f"Updating submodules for {stem}")
         internal.git.update_submodules(dest)
-        t_end = time.time()
-
-        logger.success(f"Submodule update took {t_end-t_start:.3f}s")
 
 
 def rosdep_update() -> None:
