@@ -63,8 +63,6 @@ def build_catkin_packages() -> None:
             check=True,
             cwd=Path.home() / "catkin_ws",
         )
-
-        subprocess.run(["rospack", "find", "spot_msgs"], check=True)
     except subprocess.CalledProcessError:
         _critical_build_failure()
 
