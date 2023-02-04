@@ -38,5 +38,20 @@ def launch_container(config: Config) -> None:
     subprocess.run(subprocess_args, env=get_env())
 
 
+def source_dockerrc() -> None:
+    """Grab shell environment variables after sourcing ROS-related files."""
+
+    result = subprocess.run(
+        "source /dockerrc && env",
+        shell=True,
+        executable="/bin/bash",
+        capture_output=True,
+        text=True,
+    )
+    for line in result.stdout.splitlines():
+        key, _, value = line.partition("=")
+        os.environ[key] = value
+
+
 def are_we_in_the_container() -> bool:
     return os.path.exists("/dockerrc")

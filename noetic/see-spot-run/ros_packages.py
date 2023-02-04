@@ -81,6 +81,7 @@ def host_entrypoint(config: Config) -> None:
 def container_entrypoint() -> None:
     logger.info("We're inside the docker container now")
 
+    internal.docker.source_dockerrc()
     for k, v in os.environ.items():
         if k.startswith("ROS"):
             logger.info(f"{k}={v}")
@@ -94,18 +95,8 @@ def container_entrypoint() -> None:
     )
 
     internal.ros.build_catkin_packages()
-
     # We need to grab new environment variables after the catkin build.
-    result = subprocess.run(
-        "source /dockerrc && env",
-        shell=True,
-        executable="/bin/bash",
-        capture_output=True,
-        text=True,
-    )
-    for line in result.stdout.splitlines():
-        key, _, value = line.partition("=")
-        os.environ[key] = value
+    internal.docker.source_dockerrc()
 
     for amrl_pkg in amrl_pkgs:
         internal.ros.build_amrl_package(Path.home() / "ut-amrl" / Path(amrl_pkg).stem)
