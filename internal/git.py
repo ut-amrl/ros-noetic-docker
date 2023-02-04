@@ -72,7 +72,7 @@ def get_user_protocol_preference() -> GitHubProtocol:
     elif user_input == "2":
         protocol = GitHubProtocol.HTTPS
     else:
-        logger.info(f"Unrecognized input '{user_input}'. Falling back to HTTPS.")
+        logger.warning(f"Unrecognized input '{user_input}'. Falling back to HTTPS.")
         protocol = GitHubProtocol.HTTPS
 
     if protocol == GitHubProtocol.SSH:
