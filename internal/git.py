@@ -112,14 +112,15 @@ def clone_repository(url: str, dest: Path, protocol: GitHubProtocol) -> None:
 
 
 def update_submodules(repo_dir: Path) -> None:
+    # Do not parallelize with --jobs since the user may need to enter an ssh key password
+    # TODO: if the user has an ssh-agent, then go ahead and parallelize
     subprocess_args = [
         "git",
         "submodule",
         "update",
         "--init",
         "--recursive",
-        "--jobs",
-        "8",
+        "--progress",
     ]
 
     try:
