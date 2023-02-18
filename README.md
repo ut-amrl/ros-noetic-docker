@@ -55,6 +55,18 @@ Under the `NAMES` column, there should be a container with the name
 docker exec -it $USER-noetic-<tag>-app-1 [bash|zsh]
 ```
 
+### When opening a new shell in the container
+re-run 
+```shell
+[[ -e /dockerrc ]] && source /dockerrc
+```
+
+If you run into missing ROS packages, set the ROS_PACKAGE_PATH appropriately:
+
+```shell
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:<path_containing_package>
+```
+
 ### Stop your Docker container
 
 This might take a few seconds to finish running.
