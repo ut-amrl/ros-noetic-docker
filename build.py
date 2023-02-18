@@ -2,8 +2,16 @@
 
 import argparse
 import subprocess
+import sys
+from typing import NoReturn
 
 from noetic.env import available_tags, get_env
+
+
+class ArgumentParser(argparse.ArgumentParser):
+    def error(self, message: str) -> NoReturn:
+        self.print_help(sys.stderr)
+        self.exit(2, f"\n{self.prog}: error: {message}\n")
 
 
 def build(tag: str) -> None:
@@ -13,8 +21,14 @@ def build(tag: str) -> None:
 
 
 if __name__ == "__main__":
-    argparser = argparse.ArgumentParser()
-    argparser.add_argument("tag", type=str, choices=available_tags())
+    argparser = ArgumentParser()
+    argparser.add_argument(
+        "tag",
+        type=str,
+        metavar="TAG",
+        choices=available_tags(),
+        help=f"One of {available_tags()}",
+    )
 
     args = argparser.parse_args()
 
