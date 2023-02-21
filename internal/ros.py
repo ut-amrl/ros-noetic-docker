@@ -61,10 +61,11 @@ def build_catkin_packages() -> None:
     logger.info("Building catkin packages")
 
     # catkin_make has a tendency to not follow the dependency graph when
-    # building Spot packages, so use catkin build
+    # building Spot packages in parallel, so build using one job
     try:
         subprocess.run(
-            ["catkin", "build"],
+            # ["catkin", "build"],
+            ["catkin_make", "-j", "1"],
             check=True,
             cwd=Path.home() / "catkin_ws",
         )
