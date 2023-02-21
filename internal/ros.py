@@ -65,7 +65,7 @@ def build_catkin_packages() -> None:
     try:
         subprocess.run(
             # ["catkin", "build"],
-            ["catkin_make", "-j", "1"],
+            ["catkin_make", "-C", "catkin_ws", "-j", "1"],
             check=True,
             cwd=Path.home() / "catkin_ws",
         )
