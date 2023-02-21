@@ -58,7 +58,7 @@ def host_entrypoint(config: Config) -> None:
             target_is_directory=True,
         )
 
-    if not os.path.exists(Path.home() / "ut-amrl/amrl-maps"):
+    if not os.path.exists(Path.home() / "ut-amrl/amrl_maps"):
         logger.info("Symlinking ~/ut-amrl/spot_autonomy/maps to ~/ut-amrl/amrl_maps")
         os.symlink(
             Path.home() / "ut-amrl/spot_autonomy/maps",
