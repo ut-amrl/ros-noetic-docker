@@ -58,6 +58,14 @@ def host_entrypoint(config: Config) -> None:
             target_is_directory=True,
         )
 
+    if not os.path.exists(Path.home() / "ut-amrl/amrl-maps"):
+        logger.info("Symlinking ~/ut-amrl/spot_autonomy/maps to ~/ut-amrl/amrl_maps")
+        os.symlink(
+            Path.home() / "ut-amrl/spot_autonomy/maps",
+            Path.home() / "ut-amrl/amrl_maps",
+            target_is_directory=True,
+        )
+
     logger.success("Cloned package repositories")
     logger.info("Moving execution into the Docker container to build packages...")
 
