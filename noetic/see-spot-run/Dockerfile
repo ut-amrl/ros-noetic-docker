@@ -37,3 +37,8 @@ RUN apt-get update && apt-get install -y \
 # Additional utilities
 RUN apt-get update && apt-get install -y \
     joystick
+
+# Install python3.9
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update && apt-get install -y \
+    python3.9-full
