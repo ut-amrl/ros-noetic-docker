@@ -1,3 +1,4 @@
+import io
 import os
 import subprocess
 import sys
@@ -43,14 +44,62 @@ def _critical_build_failure() -> NoReturn:
     sys.exit(1)
 
 
+def _capture_process_output(process: subprocess.Popen) -> None:
+    """The caller should redirect stdout to pipe and stderr to stdout."""
+    if process.stdout is None:
+        # no output to capture
+        return
+
+    ANSI_PREFIX = "\x1b["
+    ANSI_PREV_LINE = ANSI_PREFIX + "1F"
+    ANSI_ERASE_LINE = ANSI_PREFIX + "2K"
+
+    # We'll dump all of the output if the build command fails.
+    all_output_lines = []
+
+    lines_to_clear = 0
+    MAX_QUEUE_SIZE = min(10, os.get_terminal_size().lines - 2)
+    MAX_LINE_WIDTH = os.get_terminal_size().columns - 4
+
+    sentinel = b""  # bytes mode by default
+    if isinstance(process.stdout, io.TextIOWrapper):
+        sentinel = ""  # type: ignore
+
+    for line in iter(process.stdout.readline, sentinel):
+        if isinstance(line, bytes):
+            line = line.decode()
+        all_output_lines.append(line.rstrip())
+
+        if MAX_QUEUE_SIZE > 0:
+            print(
+                f"{ANSI_PREV_LINE}{ANSI_ERASE_LINE}" * lines_to_clear,
+                end="",
+                flush=True,
+            )
+            tail = all_output_lines[-MAX_QUEUE_SIZE:]
+            tail = [line[:MAX_LINE_WIDTH] for line in tail]
+            print("\n".join(tail))
+            lines_to_clear = len(tail)
+
+    print(f"{ANSI_PREV_LINE}{ANSI_ERASE_LINE}" * lines_to_clear, end="", flush=True)
+
+    if process.wait() != 0:
+        print("\n".join(all_output_lines))
+
+
 def rosdep_update() -> None:
     if os.path.exists(Path.home() / ".ros/rosdep"):
         return
 
     logger.info("Running rosdep update")
-    try:
-        subprocess.run(["rosdep", "update"], check=True)
-    except subprocess.CalledProcessError:
+
+    process = subprocess.Popen(
+        ["rosdep", "update"],
+        stderr=subprocess.STDOUT,
+        stdout=subprocess.PIPE,
+    )
+    _capture_process_output(process)
+    if process.wait() != 0:
         _critical_build_failure()
 
 
@@ -62,24 +111,28 @@ def build_catkin_packages() -> None:
 
     # catkin_make has a tendency to not follow the dependency graph when
     # building Spot packages in parallel, so build using one job
-    try:
-        subprocess.run(
-            # ["catkin", "build"],
-            ["catkin_make", "-C", str(Path.home() / "catkin_ws"), "-j", "1"],
-            check=True,
-            cwd=Path.home() / "catkin_ws",
-        )
-    except subprocess.CalledProcessError:
+    process = subprocess.Popen(
+        ["catkin_make", "-C", str(Path.home() / "catkin_ws"), "-j", "1"],
+        cwd=Path.home() / "catkin_ws",
+        stderr=subprocess.STDOUT,
+        stdout=subprocess.PIPE,
+    )
+
+    _capture_process_output(process)
+    if process.wait() != 0:
         _critical_build_failure()
 
 
 def build_amrl_package(pkg_dir: Path) -> None:
     logger.info(f"Building {pkg_dir.stem}")
-    try:
-        subprocess.run(
-            ["make", "-j", str(len(os.sched_getaffinity(0)))],
-            check=True,
-            cwd=pkg_dir.absolute(),
-        )
-    except subprocess.CalledProcessError:
+
+    process = subprocess.Popen(
+        ["/usr/bin/make", "-j", str(len(os.sched_getaffinity(0)))],
+        cwd=pkg_dir.absolute(),
+        stderr=subprocess.STDOUT,
+        stdout=subprocess.PIPE,
+    )
+
+    _capture_process_output(process)
+    if process.wait() != 0:
         _critical_build_failure()
