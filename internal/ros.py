@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 from typing import NoReturn
 
+import internal.ansi as ansi
 import internal.docker
 import internal.git
 from internal import logger
@@ -50,10 +51,6 @@ def _capture_process_output(process: subprocess.Popen) -> None:
         # no output to capture
         return
 
-    ANSI_PREFIX = "\x1b["
-    ANSI_PREV_LINE = ANSI_PREFIX + "1F"
-    ANSI_ERASE_LINE = ANSI_PREFIX + "2K"
-
     # We'll dump all of the output if the build command fails.
     all_output_lines = []
 
@@ -72,7 +69,7 @@ def _capture_process_output(process: subprocess.Popen) -> None:
 
         if MAX_QUEUE_SIZE > 0:
             print(
-                f"{ANSI_PREV_LINE}{ANSI_ERASE_LINE}" * lines_to_clear,
+                f"{ansi.PREV_LINE}{ansi.CLEAR_LINE}" * lines_to_clear,
                 end="",
                 flush=True,
             )
@@ -81,7 +78,7 @@ def _capture_process_output(process: subprocess.Popen) -> None:
             print("\n".join(tail))
             lines_to_clear = len(tail)
 
-    print(f"{ANSI_PREV_LINE}{ANSI_ERASE_LINE}" * lines_to_clear, end="", flush=True)
+    print(f"{ansi.PREV_LINE}{ansi.CLEAR_LINE}" * lines_to_clear, end="", flush=True)
 
     if process.wait() != 0:
         print("\n".join(all_output_lines))
