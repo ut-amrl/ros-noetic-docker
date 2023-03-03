@@ -27,11 +27,13 @@ def check_clearpath_launch() -> None:
     if not os.path.exists(
         Path.home() / "ut-amrl/spot_autonomy/launch/start_clearpath_spot.launch"
     ):
-        logger.warning(
-            """Manual setup is required in ~/ut-amrl/spot_autonomy:
-    Replicate launch/start_clearpath_spot.launch.example to
-    launch/start_clearpath_spot.launch, filling in your Spot
-    robot username, password, and IP address."""
+        logger.attention(
+            """Additional manual setup is required in ~/ut-amrl/spot_autonomy:
+    1. Copy "launch/start_clearpath_spot.launch.example" to
+       "launch/start_clearpath_spot.launch"
+    2. In the new file, fill in your Spot robot username, password,
+       and IP address.
+    Never git add, commit, or push this new file."""
         )
 
 
