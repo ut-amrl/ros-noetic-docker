@@ -42,7 +42,7 @@ def source_dockerrc() -> None:
     """Grab shell environment variables after sourcing ROS-related files."""
 
     result = subprocess.run(
-        "source /dockerrc && env",
+        "SHELL=bash source /dockerrc && env",
         shell=True,
         executable="/bin/bash",
         capture_output=True,
