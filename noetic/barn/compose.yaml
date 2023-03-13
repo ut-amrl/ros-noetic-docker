@@ -40,3 +40,8 @@ services:
     ipc: host
 
     network_mode: host
+
+    # Allows the container to see all of the host's devices. Somewhat less
+    # secure than specifying each device individually, but makes it easier to
+    # deal with additional connections and changes to the USB ports.
+    privileged: true
