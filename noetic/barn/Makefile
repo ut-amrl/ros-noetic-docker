@@ -7,5 +7,5 @@ include ${NOETIC_DIR}/amrl-base/Makefile
 .DEFAULT_GOAL := barn
 
 .PHONY: barn
-barn:
+barn: amrl-base
 	cd ${NOETIC_DIR}/$@ && docker compose build
