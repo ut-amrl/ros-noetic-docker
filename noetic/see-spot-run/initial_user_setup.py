@@ -16,7 +16,7 @@ def safe_symlink(source: Path, destination: Path) -> None:
         os.symlink(source, destination)
 
 
-class RosPackages(internal.docker.RosPackages):
+class InitialUserSetup(internal.docker.InitialUserSetup):
     @classmethod
     def get_catkin_package_urls(cls) -> "list[str]":
         return [
@@ -52,14 +52,15 @@ class RosPackages(internal.docker.RosPackages):
         ):
             logger.attention(
                 """Additional manual setup is required in ~/ut-amrl/spot_autonomy:
-        1. Copy "launch/start_clearpath_spot.launch.example" to
-        "launch/start_clearpath_spot.launch"
-        2. In the new file, fill in your Spot robot username, password,
-        and IP address.
-        Never git add, commit, or push this new file."""
+    1. `cd ~/ut-amrl/spot_autonomy/launch`
+    2. `cp start_clearpath_spot.launch.example start_clearpath_spot.launch`
+    3. Edit "start_clearpath_spot.launch" to fill in the Spot robot username,
+       password, and IP address.
+
+    Never git add, commit, or push this new file."""
             )
 
 
 if __name__ == "__main__":
     if internal.docker.are_we_in_the_container():
-        RosPackages.build_packages()
+        InitialUserSetup.build_packages()

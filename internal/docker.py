@@ -11,7 +11,7 @@ from internal.config import Config
 from internal.env import _get_container_user, get_env
 
 
-class RosPackages:
+class InitialUserSetup:
     @classmethod
     def get_catkin_package_urls(cls) -> "list[str]":
         return []
@@ -47,7 +47,7 @@ class RosPackages:
 
         if __name__ == "__main__":
             if internal.docker.are_we_in_the_container():
-                RosPackages.build_packages()
+                InitialUserSetup.build_packages()
         """
         logger.info("We're inside the docker container now")
 
@@ -78,11 +78,13 @@ def build_image(config: Config) -> None:
     subprocess.run(subprocess_args, env=get_env(require_x_display=False))
     # todo: check return code, log error and terminate if nonzero
 
-    if config.build_ros_packages:
+    if config.with_initial_user_setup:
         try:
-            tag_spec = importlib.import_module(f"noetic.{config.tag}.ros_packages")
-            tag_spec.RosPackages.clone_packages()
-            tag_spec.RosPackages.post_clone_packages()
+            tag_spec = importlib.import_module(
+                f"noetic.{config.tag}.initial_user_setup"
+            )
+            tag_spec.InitialUserSetup.clone_packages()
+            tag_spec.InitialUserSetup.post_clone_packages()
 
             logger.info(
                 "Moving execution into the Docker container to build packages..."
@@ -99,14 +101,14 @@ def build_image(config: Config) -> None:
                     f"{_get_container_user()}-noetic-{config.tag}-app-1",
                     "python3",
                     "-m",
-                    f"noetic.{config.tag}.ros_packages",
+                    f"noetic.{config.tag}.initial_user_setup",
                 ]
             )
             stop_container(config)
             if result.returncode != 0:
                 sys.exit(result.returncode)
 
-            tag_spec.RosPackages.post_build_packages()
+            tag_spec.InitialUserSetup.post_build_packages()
         except ImportError:
             logger.error(f"No build spec for {config.tag}")
 

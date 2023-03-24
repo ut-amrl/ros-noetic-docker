@@ -18,7 +18,7 @@ class ArgumentParser(argparse.ArgumentParser):
 @dataclasses.dataclass
 class Config:
     tag: str
-    build_ros_packages: bool = False
+    with_initial_user_setup: bool = False
     _require_x_display: bool = True
 
 
@@ -32,7 +32,7 @@ def parse_args() -> Config:
         help=f"One of {available_tags()}",
     )
     argparser.add_argument(
-        "--build-ros-packages",
+        "--with-initial-user-setup",
         action="store_true",
         help="[Beta] (Build only) Also set up initial ROS packages.",
     )
