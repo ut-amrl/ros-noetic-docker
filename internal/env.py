@@ -10,6 +10,9 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+import internal.ansi as ansi
+from internal import logger
+
 
 def _get_container_user() -> str:
     return getpass.getuser()
@@ -52,15 +55,15 @@ def _get_x_display_device() -> str:
     display_device = ""
 
     if shutil.which("glxinfo") is None:
-        print(
-            """Warning: command not found: glxinfo
+        logger.warning(
+            f"""Command not found: glxinfo
     This script uses the glxinfo command from the mesa-utils package to detect
     accessible X display devices. An X display device is required for GUI
     applications and the Azure Kinect DK SDK.
-
+{ansi.BOLD}{ansi.WHITE}
     If you do not use GUI applications or the Azure Kinect DK SDK, you may
     ignore this warning.
-
+{ansi.NO_BOLD}{ansi.YELLOW}
     Steps to resolve this warning:
         - Install glxinfo with 'sudo apt install mesa-utils'
 """
@@ -89,21 +92,21 @@ def _get_x_display_device() -> str:
                 pass
 
     if display_device == "":
-        print(
-            f"""Warning: Unable to remotely access an X display device.
+        logger.warn(
+            f"""Unable to remotely access an X display device.
     An X display device is required for GUI applications and the Azure Kinect DK
     SDK.
-
+{ansi.BOLD}{ansi.WHITE}
     If you do not use GUI applications or the Azure Kinect DK SDK, you may
     ignore this warning.
-
+{ansi.NO_BOLD}{ansi.YELLOW}
     Steps to resolve this warning:
-        - Create an X session on "{_get_container_host()}" by logging into
-          the GUI on the physical machine.
-        - Run "xhost +" in a terminal on the physical machine.
-          This allows any host to access the running X server.
-        - Lock the screen on the physical machine. Do not log out of the
-          GUI session. Logging out of the GUI session will close the X session.
+        - Create an X session on "{_get_container_host()}" by logging into the
+          GUI on the physical machine.
+        - Run "xhost +" in a terminal on the physical machine. This allows any
+          host to access the running X server.
+        - Lock the screen on the physical machine. Do not log out of the GUI
+          session. Logging out of the GUI session will close the X session.
 """
         )
 

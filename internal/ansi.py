@@ -5,6 +5,7 @@ RED = PREFIX + "31m"
 GREEN = PREFIX + "32m"
 YELLOW = PREFIX + "33m"
 CYAN = PREFIX + "36m"
+WHITE = PREFIX + "37m"
 
 # SGR sequences
 RESET = PREFIX + "0m"
