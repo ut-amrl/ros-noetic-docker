@@ -6,6 +6,7 @@ import time
 from pathlib import Path
 from typing import NoReturn, Union
 
+import internal.ansi as ansi
 from internal import logger
 
 
@@ -61,20 +62,23 @@ def get_user_protocol_preference() -> GitHubProtocol:
     # information to put in a simple prompt. If the user has a PAT set up,
     # they'll probably know this information anyway.
     print(
-        """How would you like to clone repositories from GitHub?
+        f"""How would you like to clone repositories from GitHub?
 
-    (1) SSH             [public + private]      [pull + push]
-    (2) HTTPS           [public only]           [pull only]
-
-    This choice will not affect how git submodules are cloned.
+    Your options are:
+{ansi.BOLD}
+    (1) SSH   : pull and push access to public and private repositories
+    (2) HTTPS : pull access to public repositories only
+{ansi.NO_BOLD}
+    This choice will not affect how git submodules are cloned. Submodules
+    specified as SSH addresses will be cloned using SSH.
 """
     )
 
-    user_input = input("[1 or 2]: ")
+    user_input = input("[SSH or HTTPS] ? ").strip().lower()
 
-    if user_input == "1":
+    if user_input in ["1", "ssh"]:
         protocol = GitHubProtocol.SSH
-    elif user_input == "2":
+    elif user_input in ["2", "https"]:
         protocol = GitHubProtocol.HTTPS
     else:
         logger.warning(f"Unrecognized input '{user_input}'. Falling back to HTTPS.")

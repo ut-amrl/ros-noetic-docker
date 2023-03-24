@@ -54,24 +54,39 @@ def _get_x_display_device() -> str:
     # this case.
     display_device = ""
 
+    SKIP_INDICATOR_FILE = Path("internal/.skip_get_x_display_device")
+    if SKIP_INDICATOR_FILE.exists():
+        logger.info("Skipping DISPLAY check.")
+        return display_device
+
     if shutil.which("glxinfo") is None:
         logger.warning(
             f"""Command not found: glxinfo
     This script uses the glxinfo command from the mesa-utils package to detect
     accessible X display devices. An X display device is required for GUI
-    applications and the Azure Kinect DK SDK.
+    applications and the Azure Kinect DK Camera SDK.
 {ansi.BOLD}{ansi.WHITE}
-    If you do not use GUI applications or the Azure Kinect DK SDK, you may
+    Would you like to ignore this warning?
+
+    If you do not use GUI applications or the Azure Kinect DK Camera, you may
     ignore this warning.
+
+    Your options are:
+        YES    : Ignore once. This warning will appear again in the future.
+        ALWAYS : Always ignore this warning.
+        NO     : Follow the steps below to resolve this warning.
 {ansi.NO_BOLD}{ansi.YELLOW}
     Steps to resolve this warning:
         - Install glxinfo with 'sudo apt install mesa-utils'
 """
         )
 
-        ignore_warning = input("Ignore this warning? [y/n]: ")
-        if not ignore_warning.lower().startswith("y"):
-            return ""
+        ignore_warning = input("Ignore this warning? [YES/ALWAYS/NO]: ").strip().lower()
+        if ignore_warning.startswith("a"):
+            SKIP_INDICATOR_FILE.touch(exist_ok=True)
+            return display_device
+        elif ignore_warning.startswith("y"):
+            return display_device
         else:
             raise FileNotFoundError("glxinfo")
     else:
@@ -95,10 +110,17 @@ def _get_x_display_device() -> str:
         logger.warn(
             f"""Unable to remotely access an X display device.
     An X display device is required for GUI applications and the Azure Kinect DK
-    SDK.
+    Camera SDK.
 {ansi.BOLD}{ansi.WHITE}
-    If you do not use GUI applications or the Azure Kinect DK SDK, you may
+    Would you like to ignore this warning?
+
+    If you do not use GUI applications or the Azure Kinect DK Camera, you may
     ignore this warning.
+
+    Your options are:
+        YES    : Ignore once. This warning will appear again in the future.
+        ALWAYS : Always ignore this warning.
+        NO     : Follow the steps below to resolve this warning.
 {ansi.NO_BOLD}{ansi.YELLOW}
     Steps to resolve this warning:
         - Create an X session on "{_get_container_host()}" by logging into the
@@ -110,9 +132,12 @@ def _get_x_display_device() -> str:
 """
         )
 
-        ignore_warning = input("Ignore this warning? [y/n]: ")
-        if ignore_warning.lower().startswith("y"):
-            return ""
+        ignore_warning = input("Ignore this warning? [YES/ALWAYS/NO]: ").strip().lower()
+        if ignore_warning.startswith("a"):
+            SKIP_INDICATOR_FILE.touch(exist_ok=True)
+            return display_device
+        elif ignore_warning.startswith("y"):
+            return display_device
         else:
             raise RuntimeError("No X display device detected.")
 
