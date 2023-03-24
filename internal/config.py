@@ -19,6 +19,7 @@ class ArgumentParser(argparse.ArgumentParser):
 class Config:
     tag: str
     build_ros_packages: bool = False
+    _require_x_display: bool = True
 
 
 def parse_args() -> Config:

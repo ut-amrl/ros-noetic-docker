@@ -10,7 +10,7 @@ from internal.env import _get_container_user, get_env
 def build_image(config: Config) -> None:
     subprocess_args = ["make", "-f", f"noetic/{config.tag}/Makefile"]
 
-    subprocess.run(subprocess_args, env=get_env())
+    subprocess.run(subprocess_args, env=get_env(require_x_display=False))
     # todo: check return code, log error and terminate if nonzero
 
     if config.build_ros_packages:
@@ -35,7 +35,22 @@ def launch_container(config: Config) -> None:
         "--detach",
     ]
 
-    subprocess.run(subprocess_args, env=get_env())
+    subprocess.run(
+        subprocess_args,
+        env=get_env(require_x_display=config._require_x_display),
+    )
+
+
+def stop_container(config: Config) -> None:
+    subprocess_args = [
+        "docker",
+        "stop",
+        "--time",
+        "0",
+        f"{_get_container_user()}-noetic-{config.tag}-app-1",
+    ]
+
+    subprocess.run(subprocess_args, stdout=subprocess.DEVNULL)
 
 
 def source_dockerrc() -> None:

@@ -133,15 +133,19 @@ def available_tags() -> "list[str]":
     return tags
 
 
-def get_env() -> "dict[str, str]":
-    return {
+def get_env(require_x_display: bool = True) -> "dict[str, str]":
+    env = {
         "CONTAINER_HOST": _get_container_host(),
         "CONTAINER_RUNTIME": _get_container_runtime(),
         "CONTAINER_UID": _get_container_uid(),
         "CONTAINER_USER": _get_container_user(),
-        "DISPLAY": _get_x_display_device(),
         "DOCKER_SCAN_SUGGEST": "false",
     }
+
+    if require_x_display:
+        env["DISPLAY"] = _get_x_display_device()
+
+    return env
 
 
 if __name__ == "__main__":

@@ -71,6 +71,7 @@ def host_entrypoint(config: Config) -> None:
     logger.success("Cloned package repositories")
     logger.info("Moving execution into the Docker container to build packages...")
 
+    config._require_x_display = False
     internal.docker.launch_container(config)
 
     result = subprocess.run(
@@ -86,6 +87,7 @@ def host_entrypoint(config: Config) -> None:
             f"noetic.{config.tag}.ros_packages",
         ]
     )
+    internal.docker.stop_container(config)
     if result.returncode != 0:
         sys.exit(result.returncode)
 
