@@ -23,8 +23,13 @@ def check_github_ssh_auth() -> Union[bool, NoReturn]:
     # high latency to GitHub, short passwords, or fast typers).
     t_start = time.time()
 
+    subprocess_args = ["ssh", "-T", "git@github.com"]
+
+    logger.info(
+        f"Running `{' '.join(subprocess_args)}`. You may be prompted for a password."
+    )
     result = subprocess.run(
-        ["ssh", "-T", "git@github.com"],
+        subprocess_args,
         capture_output=True,
         text=True,
     )
