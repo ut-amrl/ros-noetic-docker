@@ -55,7 +55,7 @@ def _capture_process_output(process: subprocess.Popen) -> None:
     all_output_lines = []
 
     lines_to_clear = 0
-    MAX_QUEUE_SIZE = min(10, os.get_terminal_size().lines - 2)
+    MAX_LINE_COUNT = min(10, os.get_terminal_size().lines - 2)
     MAX_LINE_WIDTH = os.get_terminal_size().columns - 4
 
     sentinel = b""  # bytes mode by default
@@ -67,13 +67,13 @@ def _capture_process_output(process: subprocess.Popen) -> None:
             line = line.decode()
         all_output_lines.append(line.rstrip())
 
-        if MAX_QUEUE_SIZE > 0:
+        if MAX_LINE_COUNT > 0:
             print(
                 f"{ansi.PREV_LINE}{ansi.CLEAR_LINE}" * lines_to_clear,
                 end="",
                 flush=True,
             )
-            tail = all_output_lines[-MAX_QUEUE_SIZE:]
+            tail = all_output_lines[-MAX_LINE_COUNT:]
             tail = [line[:MAX_LINE_WIDTH] for line in tail]
             print("\n".join(tail))
             lines_to_clear = len(tail)
