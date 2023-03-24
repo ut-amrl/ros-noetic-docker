@@ -104,6 +104,13 @@ def convert_url_protocol(
         return url
 
 
+def _critical_git_failure() -> NoReturn:
+    logger.critical("Git operation failed. Check git logs.")
+    logger.critical("Please include the full log if you create a GitHub issue.")
+    logger.critical("https://github.com/ut-amrl/ros-noetic-docker/issues")
+    sys.exit(1)
+
+
 def clone_repository(url: str, dest: Path, protocol: GitHubProtocol) -> None:
     url = convert_url_protocol(url, protocol)
 
@@ -118,6 +125,7 @@ def clone_repository(url: str, dest: Path, protocol: GitHubProtocol) -> None:
         subprocess.run(subprocess_args, check=True)
     except subprocess.CalledProcessError:
         logger.error(f"Unable to clone {url} to {dest}")
+        _critical_git_failure()
 
 
 def update_submodules(repo_dir: Path) -> None:
@@ -136,6 +144,7 @@ def update_submodules(repo_dir: Path) -> None:
         subprocess.run(subprocess_args, cwd=repo_dir, check=True)
     except subprocess.CalledProcessError:
         logger.error(f"Unable to update submodules for {repo_dir}")
+        _critical_git_failure()
 
 
 def get_repository_hash(repo_dir_or_file: Union[str, Path]) -> str:

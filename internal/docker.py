@@ -34,7 +34,6 @@ class InitialUserSetup:
         for rosbuild_pkg in cls.get_rosbuild_package_urls():
             internal.ros.clone_amrl_package(rosbuild_pkg, github_protocol)
 
-        # TODO: detect clone failure
         logger.success("Cloned package repositories")
 
     @classmethod
