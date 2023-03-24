@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import NoReturn
 
 import internal.ansi as ansi
-import internal.docker
 import internal.git
 from internal import logger
 
