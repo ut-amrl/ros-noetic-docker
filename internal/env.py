@@ -10,6 +10,9 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+import internal.ansi as ansi
+from internal import logger
+
 
 def _get_container_user() -> str:
     return getpass.getuser()
@@ -51,21 +54,39 @@ def _get_x_display_device() -> str:
     # this case.
     display_device = ""
 
+    SKIP_INDICATOR_FILE = Path("internal/.skip_get_x_display_device")
+    if SKIP_INDICATOR_FILE.exists():
+        logger.info("Skipping DISPLAY check.")
+        return display_device
+
     if shutil.which("glxinfo") is None:
-        print(
-            """Error: command not found: glxinfo
+        logger.warning(
+            f"""Command not found: glxinfo
     This script uses the glxinfo command from the mesa-utils package to detect
     accessible X display devices. An X display device is required for GUI
-    applications and the Azure Kinect DK SDK.
+    applications and the Azure Kinect DK Camera SDK.
+{ansi.BOLD}{ansi.WHITE}
+    Would you like to ignore this warning?
 
-    Steps to resolve:
+    If you do not use GUI applications or the Azure Kinect DK Camera, you may
+    ignore this warning.
+
+    Your options are:
+        YES    : Ignore once. This warning will appear again in the future.
+        ALWAYS : Always ignore this warning.
+        NO     : Follow the steps below to resolve this warning.
+{ansi.NO_BOLD}{ansi.YELLOW}
+    Steps to resolve this warning:
         - Install glxinfo with 'sudo apt install mesa-utils'
 """
         )
 
-        continue_anyway = input("Continue anyway? [y/n]: ")
-        if not continue_anyway.lower().startswith("y"):
-            return ""
+        ignore_warning = input("Ignore this warning? [YES/ALWAYS/NO]: ").strip().lower()
+        if ignore_warning.startswith("a"):
+            SKIP_INDICATOR_FILE.touch(exist_ok=True)
+            return display_device
+        elif ignore_warning.startswith("y"):
+            return display_device
         else:
             raise FileNotFoundError("glxinfo")
     else:
@@ -86,23 +107,37 @@ def _get_x_display_device() -> str:
                 pass
 
     if display_device == "":
-        print(
-            """Warning: Unable to access an X display device.
+        logger.warn(
+            f"""Unable to remotely access an X display device.
     An X display device is required for GUI applications and the Azure Kinect DK
-    SDK.
+    Camera SDK.
+{ansi.BOLD}{ansi.WHITE}
+    Would you like to ignore this warning?
 
-    Steps to resolve for building over ssh:
-        - Log into the computer's GUI
-        - Verify that the $DISPLAY environment variable is set in the GUI
-        - Allow any host to access the X server by running 'xhost +' in a
-          terminal
-        - Lock, but do not log out of, the computer's GUI
+    If you do not use GUI applications or the Azure Kinect DK Camera, you may
+    ignore this warning.
+
+    Your options are:
+        YES    : Ignore once. This warning will appear again in the future.
+        ALWAYS : Always ignore this warning.
+        NO     : Follow the steps below to resolve this warning.
+{ansi.NO_BOLD}{ansi.YELLOW}
+    Steps to resolve this warning:
+        - Create an X session on "{_get_container_host()}" by logging into the
+          GUI on the physical machine.
+        - Run "xhost +" in a terminal on the physical machine. This allows any
+          host to access the running X server.
+        - Lock the screen on the physical machine. Do not log out of the GUI
+          session. Logging out of the GUI session will close the X session.
 """
         )
 
-        continue_anyway = input("Continue anyway? [y/n]: ")
-        if continue_anyway.lower().startswith("y"):
-            return ""
+        ignore_warning = input("Ignore this warning? [YES/ALWAYS/NO]: ").strip().lower()
+        if ignore_warning.startswith("a"):
+            SKIP_INDICATOR_FILE.touch(exist_ok=True)
+            return display_device
+        elif ignore_warning.startswith("y"):
+            return display_device
         else:
             raise RuntimeError("No X display device detected.")
 
@@ -112,7 +147,7 @@ def _get_x_display_device() -> str:
 def available_tags() -> "list[str]":
     tags = []
 
-    noetic_dir = Path(__file__).parent
+    noetic_dir = Path(__file__).parent.parent / "noetic"
     for entry in os.listdir(noetic_dir):
         entry_path = noetic_dir / entry
         if (
@@ -126,15 +161,19 @@ def available_tags() -> "list[str]":
     return tags
 
 
-def get_env() -> "dict[str, str]":
-    return {
+def get_env(require_x_display: bool = True) -> "dict[str, str]":
+    env = {
         "CONTAINER_HOST": _get_container_host(),
         "CONTAINER_RUNTIME": _get_container_runtime(),
         "CONTAINER_UID": _get_container_uid(),
         "CONTAINER_USER": _get_container_user(),
-        "DISPLAY": _get_x_display_device(),
         "DOCKER_SCAN_SUGGEST": "false",
     }
+
+    if require_x_display:
+        env["DISPLAY"] = _get_x_display_device()
+
+    return env
 
 
 if __name__ == "__main__":

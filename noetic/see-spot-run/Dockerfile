@@ -17,8 +17,7 @@ RUN apt-get update && apt-get install -y \
     qt5-default libqt5websockets5-dev libgoogle-glog-dev libgflags-dev
 
 # https://github.com/ut-amrl/spot_ros
-## Extra packages not mentioned anywhere but required for the initial
-## rosdep install --from-paths src --ignore-src -y
+## https://github.com/ut-amrl/spot_ros/blob/main/spot_driver/package.xml
 RUN apt-get update && apt-get install -y \
     ros-noetic-twist-mux \
     ros-noetic-interactive-marker-twist-server \
