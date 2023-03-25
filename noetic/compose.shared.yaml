@@ -27,7 +27,10 @@ services:
 
     volumes:
       - /home/${CONTAINER_USER}:/home/${CONTAINER_USER}
-      - ./dockerrc:/dockerrc
+      - ./.dockerenv:/.dockerenv
+        # /dockerrc is now deprecated. All documentation and internal tooling
+        # should use /.dockerenv instead.
+      - ./.dockerenv:/dockerrc
 
       # Shared code dependencies
       - /usr/local/cuda:/usr/local/cuda:ro

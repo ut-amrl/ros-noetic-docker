@@ -15,17 +15,26 @@ Add users to the `docker` group: <https://docs.docker.com/engine/install/linux-p
 
 ## Usage
 
-### Add /dockerrc to your shell file
+### Source `/.dockerenv` in your shell file
 
-`/dockerrc` provides default commands to initialize ROS and associated PATH
-environment variables. Users can use these defaults by sourcing `/dockerrc` in
-their shell files, e.g.
+`/.dockerenv` contains recommended default ROS-related environment variables for
+the Docker container.
 
 ```shell
-[[ -e /dockerrc ]] && source /dockerrc
+# This line checks for the existence of /.dockerenv and sources the file only if
+# it exists. Add it to your shell initialization file manually or using one of #
+# the commands below.
+[[ -e /.dockerenv ]] && source /.dockerenv
+
+# Bash
+echo "[[ -e /.dockerenv ]] && source /.dockerenv" >> ~/.bashrc
+
+# Zsh
+echo "[[ -e /.dockerenv ]] && source /.dockerenv" >> ~/.zshrc
 ```
 
-or specify their own configuration in their shell init file.
+Alternatively, you may specify your own ROS environment variables in your shell
+file.
 
 ### Build and start your Docker container
 
@@ -53,12 +62,6 @@ Under the `NAMES` column, there should be a container with the name
 
 ```shell
 docker exec -it $USER-noetic-<tag>-app-1 [bash|zsh]
-```
-
-### When opening a new shell in the container
-re-run 
-```shell
-[[ -e /dockerrc ]] && source /dockerrc
 ```
 
 If you run into missing ROS packages, set the ROS_PACKAGE_PATH appropriately:

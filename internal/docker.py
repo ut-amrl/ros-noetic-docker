@@ -50,13 +50,13 @@ class InitialUserSetup:
         """
         logger.info("We're inside the docker container now")
 
-        source_dockerrc()
+        source_dockerenv()
 
         internal.ros.rosdep_update()
 
         internal.ros.build_catkin_packages()
         # We need to grab new environment variables after the catkin build.
-        source_dockerrc()
+        source_dockerenv()
 
         for rosbuild_pkg in cls.get_rosbuild_package_urls():
             internal.ros.build_amrl_package(
@@ -145,11 +145,11 @@ def stop_container(config: Config) -> None:
     subprocess.run(subprocess_args, stdout=subprocess.DEVNULL)
 
 
-def source_dockerrc() -> None:
+def source_dockerenv() -> None:
     """Grab shell environment variables after sourcing ROS-related files."""
 
     result = subprocess.run(
-        "SHELL=bash source /dockerrc && env",
+        "SHELL=bash source /.dockerenv && env",
         shell=True,
         executable="/bin/bash",
         capture_output=True,
@@ -161,4 +161,4 @@ def source_dockerrc() -> None:
 
 
 def are_we_in_the_container() -> bool:
-    return os.path.exists("/dockerrc")
+    return os.path.exists("/.dockerenv")
