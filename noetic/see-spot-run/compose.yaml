@@ -2,53 +2,22 @@ version: "3"
 
 services:
   app:
-    runtime: ${CONTAINER_RUNTIME}
-
-    image: ${CONTAINER_USER}-noetic:see-spot-run
-
-    hostname: ${CONTAINER_USER}-noetic:see-spot-run@${CONTAINER_HOST}
-
-    build:
-      context: ..
-      dockerfile: see-spot-run/Dockerfile
-      args:
-        CONTAINER_UID: ${CONTAINER_UID}
-        CONTAINER_USER: ${CONTAINER_USER}
+    extends:
+      file: ../compose.shared.yaml
+      service: app
 
     group_add:
       - "dialout"
 
     environment:
-      # X session
-      - DISPLAY=${DISPLAY}
       # Docker-to-host audio forwarding
       - PULSE_SERVER=unix:/run/user/${CONTAINER_UID}/pulse/native
 
-    user: ${CONTAINER_UID}:${CONTAINER_UID}
-    working_dir: /home/${CONTAINER_USER}
-
     volumes:
-      - /home/${CONTAINER_USER}:/home/${CONTAINER_USER}
-      - ../dockerrc:/dockerrc
-      # Shared code dependencies
-      - /usr/local/cuda:/usr/local/cuda:ro
-      - /opt/libtorch:/opt/libtorch:ro
-      # User and group list
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
-      # X session
-      - /tmp/.X11-unix:/tmp/.X11-unix:ro
       # Docker-to-host audio forwarding
       - /etc/alsa:/etc/alsa:ro
       - /usr/share/alsa:/usr/share/alsa:ro
       - /run/user/${CONTAINER_UID}/pulse/native:/run/user/${CONTAINER_UID}/pulse/native:ro
-
-    # Using the host system's IPC namespace fixes UI glitches in rviz.
-    #
-    # https://stackoverflow.com/a/68490352
-    ipc: host
-
-    network_mode: host
 
     # Allows the container to see all of the host's devices. Somewhat less
     # secure than specifying each device individually, but makes it easier to

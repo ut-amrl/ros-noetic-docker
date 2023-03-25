@@ -3,7 +3,6 @@
 import getpass
 import json
 import os
-import os.path
 import platform
 import shutil
 import subprocess
@@ -12,6 +11,7 @@ from typing import Any
 
 import internal.ansi as ansi
 from internal import logger
+from internal.config import Config
 
 
 def _get_container_user() -> str:
@@ -36,7 +36,7 @@ def _get_container_runtime() -> str:
     if "nvidia" in info["Runtimes"].keys():
         return "nvidia"
     else:
-        return info["DefaultRuntime"]
+        return info["DefaultRuntime"]  # type: ignore
 
 
 def _get_x_display_device() -> str:
@@ -144,38 +144,24 @@ def _get_x_display_device() -> str:
     return display_device
 
 
-def available_tags() -> "list[str]":
-    tags = []
-
-    noetic_dir = Path(__file__).parent.parent / "noetic"
-    for entry in os.listdir(noetic_dir):
-        entry_path = noetic_dir / entry
-        if (
-            os.path.isdir(entry_path)
-            and os.path.isfile(entry_path / "Dockerfile")
-            and os.path.isfile(entry_path / "Makefile")
-            and os.path.isfile(entry_path / "compose.yaml")
-        ):
-            tags.append(entry)
-
-    return tags
-
-
-def get_env(require_x_display: bool = True) -> "dict[str, str]":
+def get_env(config: Config) -> "dict[str, str]":
     env = {
         "CONTAINER_HOST": _get_container_host(),
         "CONTAINER_RUNTIME": _get_container_runtime(),
         "CONTAINER_UID": _get_container_uid(),
         "CONTAINER_USER": _get_container_user(),
         "DOCKER_SCAN_SUGGEST": "false",
+        "IMAGE_TAG": config.tag,
     }
 
-    if require_x_display:
+    if config._require_x_display:
         env["DISPLAY"] = _get_x_display_device()
+    else:
+        env["DISPLAY"] = ""
 
     return env
 
 
 if __name__ == "__main__":
-    for k, v in get_env().items():
+    for k, v in get_env(Config(tag="")).items():
         print(f"{k}={v}")

@@ -1,0 +1,52 @@
+version: "3"
+
+# Make sure this file is compatible as a base for extends (see "Restrictions")
+# https://docs.docker.com/compose/compose-file/05-services/#extends
+
+services:
+  app:
+    runtime: ${CONTAINER_RUNTIME}
+
+    image: ${CONTAINER_USER}-noetic:${IMAGE_TAG}
+
+    hostname: ${CONTAINER_USER}-noetic:${IMAGE_TAG}@${CONTAINER_HOST}
+
+    build:
+      context: .
+      dockerfile: ${IMAGE_TAG}/Dockerfile
+      args:
+        CONTAINER_UID: ${CONTAINER_UID}
+        CONTAINER_USER: ${CONTAINER_USER}
+
+    environment:
+      # X session
+      - DISPLAY=${DISPLAY}
+
+    user: ${CONTAINER_UID}:${CONTAINER_UID}
+    working_dir: /home/${CONTAINER_USER}
+
+    volumes:
+      - /home/${CONTAINER_USER}:/home/${CONTAINER_USER}
+      - ./dockerrc:/dockerrc
+
+      # Shared code dependencies
+      - /usr/local/cuda:/usr/local/cuda:ro
+      - /opt/libtorch:/opt/libtorch:ro
+
+      # User and group list
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+
+      # X session
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+        # /dev/dri/* should technically be mounted under devices, but we have no
+        # way of knowing how many devices there are ahead of time, e.g. on
+        # systems with multiple graphics cards.
+      - /dev/dri:/dev/dri:ro
+
+    # Using the host system's IPC namespace fixes UI glitches in rviz.
+    #
+    # https://stackoverflow.com/a/68490352
+    ipc: host
+
+    network_mode: host

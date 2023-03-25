@@ -74,7 +74,8 @@ class InitialUserSetup:
 def build_image(config: Config) -> None:
     subprocess_args = ["make", "-f", f"noetic/{config.tag}/Makefile"]
 
-    subprocess.run(subprocess_args, env=get_env(require_x_display=False))
+    config._require_x_display = False
+    subprocess.run(subprocess_args, env=get_env(config))
     # todo: check return code, log error and terminate if nonzero
 
     if config.with_initial_user_setup:
@@ -128,7 +129,7 @@ def launch_container(config: Config) -> None:
 
     subprocess.run(
         subprocess_args,
-        env=get_env(require_x_display=config._require_x_display),
+        env=get_env(config),
     )
 
 

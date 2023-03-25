@@ -1,9 +1,9 @@
 import argparse
 import dataclasses
+import os
 import sys
+from pathlib import Path
 from typing import NoReturn
-
-from internal.env import available_tags
 
 
 class ArgumentParser(argparse.ArgumentParser):
@@ -20,6 +20,23 @@ class Config:
     tag: str
     with_initial_user_setup: bool = False
     _require_x_display: bool = True
+
+
+def available_tags() -> "list[str]":
+    tags = []
+
+    noetic_dir = Path(__file__).parent.parent / "noetic"
+    for entry in os.listdir(noetic_dir):
+        entry_path = noetic_dir / entry
+        if (
+            os.path.isdir(entry_path)
+            and os.path.isfile(entry_path / "Dockerfile")
+            and os.path.isfile(entry_path / "Makefile")
+            and os.path.isfile(entry_path / "compose.yaml")
+        ):
+            tags.append(entry)
+
+    return tags
 
 
 def parse_args() -> Config:

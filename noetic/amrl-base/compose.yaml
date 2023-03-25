@@ -2,30 +2,6 @@ version: "3"
 
 services:
   app:
-    runtime: ${CONTAINER_RUNTIME}
-
-    image: ${CONTAINER_USER}-noetic:amrl-base
-
-    hostname: ${CONTAINER_USER}-noetic:amrl-base@${CONTAINER_HOST}
-
-    build:
-      context: ..
-      dockerfile: amrl-base/Dockerfile
-      args:
-        CONTAINER_UID: ${CONTAINER_UID}
-        CONTAINER_USER: ${CONTAINER_USER}
-
-    user: ${CONTAINER_UID}:${CONTAINER_UID}
-    working_dir: /home/${CONTAINER_USER}
-
-    volumes:
-      - /home/${CONTAINER_USER}:/home/${CONTAINER_USER}
-      - ../dockerrc:/dockerrc
-      # Shared code dependencies
-      - /usr/local/cuda:/usr/local/cuda:ro
-      - /opt/libtorch:/opt/libtorch:ro
-      # User and group list
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
-
-    network_mode: host
+    extends:
+      file: ../compose.shared.yaml
+      service: app
