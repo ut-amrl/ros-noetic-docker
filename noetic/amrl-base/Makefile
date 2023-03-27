@@ -6,4 +6,4 @@ NOETIC_DIR := ${realpath ${dir ${MAKEFILE_PATH}}/..}
 
 .PHONY: amrl-base
 amrl-base:
-	cd ${NOETIC_DIR}/$@ && docker compose build
+	cd ${NOETIC_DIR}/$@ && IMAGE_TAG=$@ docker compose build

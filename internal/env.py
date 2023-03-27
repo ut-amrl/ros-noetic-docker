@@ -151,6 +151,7 @@ def get_env(config: Config) -> "dict[str, str]":
         "CONTAINER_UID": _get_container_uid(),
         "CONTAINER_USER": _get_container_user(),
         "DOCKER_SCAN_SUGGEST": "false",
+        # "IMAGE_TAG" must be overridden in each Makefile for hierarchical builds
         "IMAGE_TAG": config.tag,
     }
 

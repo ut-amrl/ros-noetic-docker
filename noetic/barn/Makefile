@@ -8,4 +8,4 @@ include ${NOETIC_DIR}/amrl-base/Makefile
 
 .PHONY: barn
 barn: amrl-base
-	cd ${NOETIC_DIR}/$@ && docker compose build
+	cd ${NOETIC_DIR}/$@ && IMAGE_TAG=$@ docker compose build
