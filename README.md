@@ -15,16 +15,17 @@ Add users to the `docker` group: <https://docs.docker.com/engine/install/linux-p
 
 ## Usage
 
-### Source `/.dockerenv` in your shell file
+### Environment Setup
 
-`/.dockerenv` contains recommended default ROS-related environment variables for
-the Docker container.
+[`/.dockerenv`](noetic/.dockerenv) is a file mounted inside the Docker container
+that contains recommended ROS-related environment variables for shells in the
+Docker container. If you choose to use this recommended ROS environment setup,
+`/.dockerenv` must be sourced in every new shell in the Docker container. For
+convenience, the following commands will do that for you.
 
 ```shell
-# This line checks for the existence of /.dockerenv and sources the file only if
-# it exists. Add it to your shell initialization file manually or using one of #
-# the commands below.
-[[ -e /.dockerenv ]] && source /.dockerenv
+# The command added to your shell file checks for the existence of /.dockerenv
+# and sources the file only if it exists.
 
 # Bash
 echo "[[ -e /.dockerenv ]] && source /.dockerenv" >> ~/.bashrc
@@ -61,7 +62,7 @@ Under the `NAMES` column, there should be a container with the name
 ### Start a shell session in your Docker container
 
 ```shell
-docker exec -it $USER-noetic-<tag>-app-1 [bash|zsh]
+docker exec -it $USER-noetic-<tag>-app-1 $SHELL
 ```
 
 If you run into missing ROS packages, set the ROS_PACKAGE_PATH appropriately:
