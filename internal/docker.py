@@ -75,8 +75,10 @@ def build_image(config: Config) -> None:
     subprocess_args = ["make", "-f", f"noetic/{config.tag}/Makefile"]
 
     config._require_x_display = False
-    subprocess.run(subprocess_args, env=get_env(config))
-    # todo: check return code, log error and terminate if nonzero
+    result = subprocess.run(subprocess_args, env=get_env(config))
+    if result.returncode != 0:
+        logger.critical("Build failed. Check build logs.")
+        sys.exit(result.returncode)
 
     if config.with_initial_user_setup:
         try:
