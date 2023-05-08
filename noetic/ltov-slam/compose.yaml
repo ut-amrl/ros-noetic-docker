@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  app:
+    extends:
+      file: ../compose.shared.yaml
+      service: app
+
+    volumes:
+      - /home/tiejean/Documents/docker_workspace/LTOV_SLAM:/home/${CONTAINER_USER}
+      - /home/${CONTAINER_USER}/.bashrc:/home/${CONTAINER_USER}/.bashrc:ro
+      # mount the entire data directory
+      - /home/tiejean/Documents/mnt/oslam:/home/${CONTAINER_USER}/data
+      # Alternatively, mount each access point individually to better control permissions
+      # In this case, make sure those directories are created on the host side
+      # - /home/tiejean/Documents/mnt/oslam/original_data:/home/${CONTAINER_USER}/data/original_data:ro
+      # - /home/tiejean/Documents/mnt/oslam/calibration:/home/${CONTAINER_USER}/data/calibration:ro
+      # - /home/tiejean/Documents/mnt/oslam/yolo_models:/home/${CONTAINER_USER}/data/yolo_models:ro
+      # - /home/tiejean/Documents/mnt/oslam/lego_loam_out:/home/${CONTAINER_USER}/data/lego_loam_out
+      # - /home/tiejean/Documents/mnt/oslam/oa_slam_in:/home/${CONTAINER_USER}/data/oa_slam_in
+      # - /home/tiejean/Documents/mnt/oslam/oa_slam_out:/home/${CONTAINER_USER}/data/oa_slam_out
+      # - /home/tiejean/Documents/mnt/oslam/orb_out:/home/${CONTAINER_USER}/data/orb_out
+      # - /home/tiejean/Documents/mnt/oslam/orb_post_process:/home/${CONTAINER_USER}/data/orb_post_process
+      # - /home/tiejean/Documents/mnt/oslam/ut_vslam_results:/home/${CONTAINER_USER}/data/ut_vslam_results
+
+    # Allows the container to see all of the host's devices. Somewhat less
+    # secure than specifying each device individually, but makes it easier to
+    # deal with additional connections and changes to the USB ports.
+    privileged: true
