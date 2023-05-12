@@ -25,6 +25,7 @@ export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/ut-amrl
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/ut_vslam
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/amrl_msgs
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/ORB_SLAM2
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/ORB_SLAM3
 
 if rospack find amrl_msgs &> /dev/null; then
     export PYTHONPATH="$(rospack find amrl_msgs)/src:${PYTHONPATH}"

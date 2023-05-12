@@ -7,7 +7,7 @@ services:
       service: app
 
     volumes:
-      - /home/tiejean/Documents/docker_workspace/LTOV_SLAM:/home/${CONTAINER_USER}
+      - /home/tiejean/Documents/docker_workspace/LTOV_SLAM_Evaluation:/home/${CONTAINER_USER}
       - /home/${CONTAINER_USER}/.bashrc:/home/${CONTAINER_USER}/.bashrc:ro
       # mount the entire data directory
       - /home/tiejean/Documents/mnt/oslam:/home/${CONTAINER_USER}/data
