@@ -23,7 +23,7 @@ services:
       - DISPLAY=${DISPLAY}
 
     user: ${CONTAINER_UID}:${CONTAINER_UID}
-    working_dir: /home/${CONTAINER_USER}
+    working_dir: /root/LTOV-SLAM-Evaluation
 
     volumes:
       - ../.dockerenv:/.dockerenv
@@ -35,6 +35,8 @@ services:
       - /opt/libtorch:/opt/libtorch:ro
 
       # User and group list
+      # TODO (Taijing): mapping passwd and group from host to container seems a bit unsafe to me.
+      # Consider only mapping user-related data to the container instead in future commits
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
 
@@ -45,9 +47,9 @@ services:
         # systems with multiple graphics cards.
       - /dev/dri:/dev/dri:ro
 
-      - /home/tiejean/Documents/docker_workspace/LTOV_SLAM_Evaluation:/home/${CONTAINER_USER}
+      - /home/tiejean/Documents/podman_workspace/LTOV-SLAM-Evaluation/:/root/LTOV-SLAM-Evaluation
       # - /home/${CONTAINER_USER}/.bashrc:/home/${CONTAINER_USER}/.bashrc:ro
-      - /home/tiejean/Documents/mnt/oslam:/home/${CONTAINER_USER}/data
+      - /home/tiejean/Documents/mnt/oslam:/root/LTOV-SLAM-Evaluation/data
 
     # Using the host system's IPC namespace fixes UI glitches in rviz.
     #
