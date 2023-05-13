@@ -134,6 +134,26 @@ def launch_container(config: Config) -> None:
         env=get_env(config),
     )
 
+def launch_podman_container(config: Config) -> None:
+    pwd = os.getcwd()
+    podman_d = os.path.join(pwd, "noetic", config.tag)
+    
+    os.chdir(podman_d)
+    subprocess_args = [
+        "podman-compose",
+        "up",
+        "-t",
+        "0",
+        "--detach",
+    ]
+    environments = os.environ.copy()
+    environments.update(get_env(config, is_podman_container=True))
+    subprocess.run(
+        subprocess_args,
+        env=environments,
+    )
+    os.chdir(pwd)
+
 
 def stop_container(config: Config) -> None:
     subprocess_args = [

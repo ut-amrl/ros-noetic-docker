@@ -3,7 +3,9 @@
 This repository houses configuration files to build and run
 Docker containers tied to individual users on a shared machine.
 
-## Prerequisites
+## Docker
+
+### Prerequisites
 
 Install Docker Engine: <https://docs.docker.com/engine/install/ubuntu>
 
@@ -13,9 +15,9 @@ If applicable, install the NVIDIA Container Toolkit: <https://docs.nvidia.com/da
 
 Add users to the `docker` group: <https://docs.docker.com/engine/install/linux-postinstall>
 
-## Usage
+### Usage
 
-### Environment Setup
+#### Environment Setup
 
 [`/.dockerenv`](noetic/.dockerenv) is a file mounted inside the Docker container
 that contains recommended ROS-related environment variables for shells in the
@@ -37,7 +39,7 @@ echo "[[ -e /.dockerenv ]] && source /.dockerenv" >> ~/.zshrc
 Alternatively, you may specify your own ROS environment variables in your shell
 file.
 
-### Build and start your Docker container
+#### Build and start your Docker container
 
 ```shell
 ./build.py <tag>
@@ -47,7 +49,7 @@ file.
 ./launch.py <tag>
 ```
 
-### Verify that your Docker container is running
+#### Verify that your Docker container is running
 
 ```shell
 $ docker container ls
@@ -59,7 +61,7 @@ $ docker ps
 Under the `NAMES` column, there should be a container with the name
 `${YOUR_USERNAME}-noetic-<tag>-app-1`.
 
-### Start a shell session in your Docker container
+#### Start a shell session in your Docker container
 
 ```shell
 docker exec -it $USER-noetic-<tag>-app-1 $SHELL
@@ -71,10 +73,22 @@ If you run into missing ROS packages, set the ROS_PACKAGE_PATH appropriately:
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:<path_containing_package>
 ```
 
-### Stop your Docker container
+#### Stop your Docker container
 
 This might take a few seconds to finish running.
 
 ```shell
 docker stop $USER-noetic-<tag>-app-1
+```
+
+## Podman
+
+### Launch the Podman containter
+```
+./launch_podman.py ltov-slam-podman
+```
+
+### Start a new terminal
+```
+ podman exec -it ltov-slam-podman_app_1 $SHELL
 ```

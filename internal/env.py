@@ -144,10 +144,15 @@ def _get_x_display_device() -> str:
     return display_device
 
 
-def get_env(config: Config) -> "dict[str, str]":
+def get_env(config: Config, is_podman_container = False) -> "dict[str, str]":
+    if is_podman_container:
+        container_runtime = "nvidia" #TODO Fix hardcoding
+    else:
+        container_runtime = _get_container_runtime()
+    
     env = {
         "CONTAINER_HOST": _get_container_host(),
-        "CONTAINER_RUNTIME": _get_container_runtime(),
+        "CONTAINER_RUNTIME": container_runtime,
         "CONTAINER_UID": _get_container_uid(),
         "CONTAINER_USER": _get_container_user(),
         "DOCKER_SCAN_SUGGEST": "false",
