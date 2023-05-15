@@ -116,6 +116,8 @@ RUN sudo apt update && sudo apt install -y \
 RUN cd ~ && git clone https://github.com/davisking/dlib.git \
     && cd ~/dlib && mkdir build && cd build && cmake .. && cmake --build . && make install
 
+RUN echo "[[ -e /.dockerenv ]] && source /.dockerenv" >> /root/.bashrc
+
 # TODO: "roscore" is shared between containers with the current network
 # configuration. The container will fail to start if an instance of roscore is
 # already running, whether on the host or within a different container. Users
