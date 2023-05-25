@@ -116,6 +116,30 @@ RUN sudo apt update && sudo apt install -y \
 RUN cd ~ && git clone https://github.com/davisking/dlib.git \
     && cd ~/dlib && mkdir build && cd build && cmake .. && cmake --build . && make install
 
+# gtsam for LeGO-LOAM
+# RUN cd ~ && wget https://github.com/borglab/gtsam/archive/4.0.0-alpha2.zip \
+#     && unzip 4.0.0-alpha2.zip && cd ~/4.0.0-alpha2 && mkdir build && cd build && \
+#     cmake .. && make install
+
+RUN cd ~ && wget https://github.com/borglab/gtsam/archive/4.0.0-alpha2.zip \
+    && unzip 4.0.0-alpha2.zip  && rm 4.0.0-alpha2.zip && cd ~/gtsam-4.0.0-alpha2 \
+    && mkdir build && cd build \
+    && cmake -DGTSAM_BUILD_WITH_MARCH_NATIVE=OFF -DGTSAM_USE_SYSTEM_EIGEN=ON .. \
+    && sudo make install && sudo ldconfig
+
+# Additional libraries for conda
+RUN cd ~ && wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && mkdir /root/.conda \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda \
+    && rm -rf Miniconda3-latest-Linux-x86_64.sh
+ENV PATH="/opt/conda/bin:$PATH"
+
+RUN cd ~ && wget https://gist.githubusercontent.com/TieJean/67c6db6c6290b3e6aeff3fe7452c87e8/raw/410d20893eecda7cd0384598e0b1c46abd65d420/conda_environment.yml \
+    && conda env create -f conda_environment.yml
+
+# Additional libraries for ut_vslam
+RUN pip install brokenaxes
+
 RUN echo "[[ -e /.dockerenv ]] && source /.dockerenv" >> /root/.bashrc
 
 # TODO: "roscore" is shared between containers with the current network
