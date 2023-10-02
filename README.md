@@ -46,6 +46,7 @@ file.
 ```shell
 ./launch.py <tag>
 ```
+Note, for the base container on Spot, the tag is `see-spot-run` and use the command-line flag `--with-initial-user-setup` if building for the first time on a fresh account (with no cloned repositories).
 
 ### Verify that your Docker container is running
 
