@@ -9,6 +9,17 @@ export ROS_IP=127.0.0.1
 # should be reachable through this machine's ROS_IP address and interface.
 export ROS_MASTER_URI=http://localhost:11311
 
+# ------------------------------
+# Sadanand's IPs
+# Connect via AMRL VPN (and any wifi)
+#export ROS_MASTER_URI=http://10.0.0.131:11311
+#export ROS_IP=10.0.0.131
+
+# Connect over travel router on spot (Spot-5G network)
+#export ROS_MASTER_URI=http://192.168.200.2:11311
+#export ROS_IP=192.168.200.2
+# ------------------------------
+
 if [ "$SHELL" = "" ]; then
     [ "$BASH" != "" ] && export SHELL=bash
     [ "$ZSH_NAME" != "" ] && export SHELL=zsh
