@@ -20,8 +20,10 @@ if [[ -e $HOME/catkin_ws/devel/setup.$(basename "$SHELL") ]]; then
 fi
 
 # Each directory in ROS_PACKAGE_PATH is searched recursively
-export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/catkin_ws/src
-export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/ut-amrl
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/ObVi-SLAM-Evaluation/ObVi-SLAM
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/ObVi-SLAM-Evaluation/amrl_msgs
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/ObVi-SLAM-Evaluation/ORB_SLAM2
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$HOME/ObVi-SLAM-Evaluation/ORB_SLAM3
 
 if rospack find amrl_msgs &> /dev/null; then
     export PYTHONPATH="$(rospack find amrl_msgs)/src:${PYTHONPATH}"

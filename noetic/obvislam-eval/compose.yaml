@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  app:
+    extends:
+      file: ../compose.shared.yaml
+      service: app
+
+    volumes:
+      - /home/tiejean/Documents/ObVi-SLAM-Evaluation:/root/ObVi-SLAM-Evaluation
+      # - /home/${CONTAINER_USER}/.bashrc:/home/${CONTAINER_USER}/.bashrc:ro
+      # mount the entire data directory
+      - /home/tiejean/Documents/mnt/oslam:/root/ObVi-SLAM-Evaluation/data
+      # Alternatively, mount each access point individually to better control permissions
+
+    # Allows the container to see all of the host's devices. Somewhat less
+    # secure than specifying each device individually, but makes it easier to
+    # deal with additional connections and changes to the USB ports.
+    privileged: true

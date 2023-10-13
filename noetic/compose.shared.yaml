@@ -9,7 +9,7 @@ services:
 
     image: ${CONTAINER_USER}-noetic:${IMAGE_TAG}
 
-    hostname: ${CONTAINER_USER}-noetic:${IMAGE_TAG}@${CONTAINER_HOST}
+    hostname: ${CONTAINER_USER}-noetic
 
     build:
       context: .
@@ -23,10 +23,11 @@ services:
       - DISPLAY=${DISPLAY}
 
     user: ${CONTAINER_UID}:${CONTAINER_UID}
-    working_dir: /home/${CONTAINER_USER}
+    # working_dir: /home/${CONTAINER_USER}
+    working_dir: /root
 
     volumes:
-      - /home/${CONTAINER_USER}:/home/${CONTAINER_USER}
+      # - /home/${CONTAINER_USER}:/home/${CONTAINER_USER}
       - ./.dockerenv:/.dockerenv
         # /dockerrc is now deprecated. All documentation and internal tooling
         # should use /.dockerenv instead.
